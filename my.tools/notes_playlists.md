@@ -64,7 +64,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
     .                                                               %    "rest" "header" "melody"
     .                                                               %    ...
 
-### Further Suggestions
+## Further Suggestions
 
   - For each melody, leave the original X: through K: header lines in place and simply mark each as a comment using the % symbol for future reference
   - Keep the top title "T: ..." short (< 60 characters) and prefix/suffix it with the total play time for quick reference inside LOTRO
