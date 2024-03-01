@@ -23,7 +23,7 @@ The following is a preview of the list of folders for this exercise. Some of the
     d----           2/29/2024  5:55 AM                sideb           <--- Rough and needs edits
     d----           2/29/2024  5:55 AM                spirit          <--- Holiday and related
 
-##General Expectations
+## General Expectations
 
   - Each new ZIP file uploaded to this project will contain new tunes at a minimum
   - These *.abc files will be renamed, copied, or moved at will
