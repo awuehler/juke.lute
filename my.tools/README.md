@@ -4,7 +4,7 @@ Both MS PowerShell and WSL Linux (i.e. Debian or Ubuntu) are used for modificati
 
   - Compress *.abc files into a single efficient ZIP file
   - Search and replace of keywords across multiple files
-  - Append and optimize 2 or more song files into a single ABC playlist
+  - Append and optimize 2 or more melody files into a single ABC playlist
 
 Finally, to reduce the 'Enshittification' of shared ABC files by removing unnecessary and unwanted complexity.
 
