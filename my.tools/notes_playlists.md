@@ -66,7 +66,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
 
 ## Further Suggestions
 
-  - For each melody, leave the original X: through K: header lines in place and simply mark each as a comment using the % symbol for future reference
+  - For each melody, leave the original X: through K: header lines in place and simply mark each line as a comment using the % symbol for future reference
   - Keep the top title "T: ..." short (< 60 characters) and prefix/suffix it with the total play time for quick reference inside LOTRO
   - There are two kinds of "rest" flags for ABC notation; please use the "x" rest because it is hidden (i.e. ignored) in tools like Easy ABC; Whereas the other rest flag will cause applications like Easy ABC to change the appearance of a music score
   - Playlist Jams can be of any length in terms of total time taken end to end; please keep in mind your listeners and scale/curate each playlist for a well defined situation
