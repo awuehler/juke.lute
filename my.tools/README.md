@@ -85,3 +85,10 @@ The step before the AUDIO file is a live stream (i.e. recorded live stream/sessi
     - Learning to make and edit audio files from live stream recordings is left as an exercise for the reader to explore further
 
       - For example, the FFmpeg open-source project is great starting point
+
+### AI
+
+The step **beyond** the LIVE recording using pop culture vernacular is "Artificial Intelligence" or simply referred to as AI. For example, the following two references deep-dive into the world of generative music using the ABC notation:
+
+  - https://gwern.net/gpt-2-music
+  - https://huggingface.co/sander-wood/bgpt
