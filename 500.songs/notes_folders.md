@@ -12,7 +12,7 @@ The following is a preview of the list of folders for this exercise. Some of the
     d----           2/29/2024  5:55 AM                formal          <--- Mostly classical files
     d----           2/29/2024  5:55 AM                jams            <--- Playlist files
     d----           2/29/2024  5:55 AM                long2           <--- 1 to 3 minute files
-    d----           2/29/2024  5:55 AM                long4           <--- 4 to 6 minute files
+    d----           2/29/2024  5:55 AM                long4           <--- 4 to 5 minute files
     d----           2/29/2024  5:55 AM                long6           <--- 6 minute or longer files
     d----           2/29/2024  5:55 AM                older           <--- Turn of century files
     d----           2/29/2024  5:55 AM                quick           <--- Very fast tempo files
