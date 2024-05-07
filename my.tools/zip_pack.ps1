@@ -37,7 +37,7 @@
 [string]$MyMusicDirectory   = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.lute\"
 
 [string]$MyCompression      = "NoCompression" # Fastest / NoCompression / Optimal
-[string]$MyZipFile          = "$MyParentDirectory\500.songs\$MyLeafDirectory.zip"
+[string]$MyZipFile          = "$MyParentDirectory\999.songs\$MyLeafDirectory.zip"
 
 <#
 .SYNOPSIS
