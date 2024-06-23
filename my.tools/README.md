@@ -92,3 +92,5 @@ The step **beyond** the LIVE recording using pop culture vernacular is "Artifici
 
   - https://gwern.net/gpt-2-music
   - https://huggingface.co/sander-wood/bgpt
+  - https://folkrnn.org/
+  - https://themachinefolksession.org/
