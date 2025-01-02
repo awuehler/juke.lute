@@ -24,7 +24,7 @@
             Set-ExecutionPolicy Unrestricted
             Get-ExecutionPolicy -List
 
-    ASSUMPTIONS:
+    ASSUMPTION:
         - Using the latest version of Powershell (i.e. vesion 7 or above)
             - PowerShell ISE will also work (as per Execution Policy above)
             - Default MSW PowerShell should work too (e.g. version 3 or 5)
@@ -41,7 +41,6 @@
             - set default pause between each *.abc melody file
         - Track previous melodies to skip
             - to avoid repeats within a given folder of tunes
-        - Add default "ALL" as default to acccept all folders
         - Revisit Get-Random cmdlet to change re-seed between iterations
         - ...
 #>
@@ -152,6 +151,7 @@ function NextMelody {
             # NOTE: Back to back duplicates can still occur, BTW.
             # This kluge is a basic hack to lower its probability.
             $random_melody = ( Get-Random -InputObject $music_collection | Select-Object -ExpandProperty FullName )
+            $global:music_random = $random_melody
         } else {
             $global:music_random = $random_melody
         }
@@ -165,11 +165,12 @@ function NextMelody {
                 # NOTE: Back to back duplicates can still occur, BTW.
                 # This kluge is a basic hack to lower its probability.
                 $random_melody = ( Get-Random -InputObject $music_collection | Select-Object -ExpandProperty FullName )
+                $global:music_random = $random_melody
             } else {
                 $global:music_random = $random_melody
             }
         # Include matching backslashes to restrict pattern matches to folder names only.
-        } until ( $random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\" )
+        } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
 
     # Set sheltering for parameter placement.
@@ -190,7 +191,7 @@ function NextMelody {
     #$music_collection = $music_collection | ? {$_.Server -ne $random_melody}
 
     # Return an array of values.
-    return @( $random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time )
+    return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
 
 # Use do - while loop to request from user which application to use.
@@ -204,8 +205,12 @@ do {
     Write-Host "(**NOTE: Edit this script to change default paths or pause between melodies**)" -ForegroundColor Red
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
 
+    # Set default selection to "PLAYER" program.
+    $def_player = "1"
     # Capture user selection for re-use.
-    $player_type = Read-Host "Please enter which player to use (must be 1 or 2)"
+    $player_type = Read-Host "Please enter which player to use (default is AbcPlayer)"
+    # Test user input (none vs. number) and assign when null.
+    if (-not $player_type) {$player_type = $def_player}
 } while (-not ($player_type -match '^\d?1|2'))
 
 # Use do - while loop to request from user which folder(s) to use.
@@ -218,10 +223,14 @@ do {
         Write-Host "[$ndx]$($tune.ToUpper())  " -NoNewline
     }
 
-    # Capture user selection for re-use.
-    $folder_pick = Read-Host "`nPlease enter which folders to use (must be number)"
+    # Set default selection to "ALL" folders.
+    $def_folder = [Int]$folder_array.IndexOf('ALL')
+    # Capture user selection, if any index number is entered
+    $folder_pick = Read-Host ("`nPlease enter the number for which folder to use (default is [{0}]ALL)" -f $def_folder)
+    # Test user input (none vs. number) and assign when null.
+    if (-not $folder_pick) {$folder_pick = $def_folder}
 
-} while ( ( (-not ($folder_pick -match '^\d+$')) -AND ($folder_pick -le "$folder_array.Length") ) )
+} while (((-not ($folder_pick -match '^\d+$')) -AND ($folder_pick -le "$folder_array.Length")))
 
 # Use do - until loop to iterate through melodies until user input to exit.
 # TODO: add skip to next melody to jump to next *.abc file
@@ -241,5 +250,5 @@ do {
     #$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     Start-Sleep -Seconds $(FormatTimeToSecond $($new_melody[5]))
 
-} until ( [System.Console]::KeyAvailable )
+} until ([System.Console]::KeyAvailable)
 #} until ($null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
