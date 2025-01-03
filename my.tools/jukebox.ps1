@@ -41,7 +41,6 @@
             - set default pause between each *.abc melody file
         - Track previous melodies to skip
             - to avoid repeats within a given folder of tunes
-        - Revisit Get-Random cmdlet to change re-seed between iterations
         - ...
 #>
 
@@ -200,21 +199,20 @@ do {
     
     # Request user input to confirm playback.
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
-    Write-Host "$music_player `t  Press '1' for this option."
-    Write-Host "$music_editor `t  Press '2' for this option."
-    Write-Host "(**NOTE: Edit this script to change default paths or pause between melodies**)" -ForegroundColor Red
+    Write-Host "$music_player `t Press '1' for this option."
+    Write-Host "$music_editor `t Press '2' for this option."
+    Write-Host "(NOTE:  Edit this script to change default paths or pause between melodies)" -ForegroundColor Blue
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
 
     # Set default selection to "PLAYER" program.
     $def_player = "1"
     # Capture user selection for re-use.
     $player_type = Read-Host "Please enter which player to use (default is AbcPlayer)"
-    # Test user input (none vs. number) and assign when null.
+    # Test user input (none vs. number) and assign default when null.
     if (-not $player_type) {$player_type = $def_player}
 } while (-not ($player_type -match '^\d?1|2'))
 
 # Use do - while loop to request from user which folder(s) to use.
-# TODO: Add default "ALL" as default to acccept
 do {
     # Display folders to select.
     Write-Host "`nAvailable folders: "
@@ -227,15 +225,17 @@ do {
     $def_folder = [Int]$folder_array.IndexOf('ALL')
     # Capture user selection, if any index number is entered
     $folder_pick = Read-Host ("`nPlease enter the number for which folder to use (default is [{0}]ALL)" -f $def_folder)
-    # Test user input (none vs. number) and assign when null.
+    # Test user input (none vs. number) and assign default when null.
     if (-not $folder_pick) {$folder_pick = $def_folder}
 
 } while (((-not ($folder_pick -match '^\d+$')) -AND ($folder_pick -le "$folder_array.Length")))
 
 # Use do - until loop to iterate through melodies until user input to exit.
-# TODO: add skip to next melody to jump to next *.abc file
 do {
+    # Pick the next tune.
     $new_melody = NextMelody
+
+    # Display title and duration for upcoming melody
     Write-Host "`nPlaytime  : $($new_melody[5]) ($(FormatTimeToSecond $($new_melody[5])) seconds)"
     Write-Host "Selection : $(Split-Path -Path "$($new_melody[0])" -Leaf) ($(Split-Path -Path $(Split-Path -Path "$($new_melody[0])" -Parent) -Leaf))"
 
@@ -245,10 +245,7 @@ do {
     #Write-Host "To Skip   : Use TBD key to jump to next melody. "
     Write-Host "To Stop   : Use CTRL-C key to exit the jukebox."
 
-    # TODO: Change to support continue to next melody...
-    #$keyInfo = [Console]::ReadKey()
-    #$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    # TODO: Change to support continue to next melody.
     Start-Sleep -Seconds $(FormatTimeToSecond $($new_melody[5]))
 
 } until ([System.Console]::KeyAvailable)
-#} until ($null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
