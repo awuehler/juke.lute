@@ -1,21 +1,21 @@
 <#
 .SYNOPSIS
-    Script to play a random list of *.abc files using AbcPlayer or Maestro
+    Script to play a random list of *.abc files using AbcPlayer or Maestro.
 
 .DESCRIPTION
     This script is used to open an ABC player to load a selected melody file
-    for output to the default audio end point (speaker, headset, etc).
+    for output to the default audio end point (speaker, headset, & etc).
 
     It will repeat this task until user input to stop (exit) from the player.
 
-    Open a PowerShell console window on your desktop to run this script from
-    any location and follow its prompt to create a new session of randomly
-    selected melodies for listening.
+    Double-click to run this script or open a PowerShell console window on
+    your desktop to run this script from any directory. Follow its prompts
+    to create a new session of randomly selected melodies for listening.
 
         e.g. ".\play_pack.ps1"
     
     WARNING:
-    If PowerShell script execution is blocked by the MSW security policy,
+    If PowerShell script execution is blocked by your MSW security policy,
     then try the following steps to allow the execution of *.ps1 scripts:
 
         Start a new Powershell session as admin  i.e. "Run as administrator"
@@ -37,7 +37,7 @@
         - Add skip to next random melody keyboard input e.g. "spacebar"
         - Expand the setup wizard to allow:
             - set default path to juke.lute vs. juke.flute vs. juke.xyz
-            - set default path to Maestro / ABCplayer
+            - set default path to Maestro / AbcPlayer
             - set default pause between each *.abc melody file
         - Track previous melodies to skip
             - to avoid repeats within a given folder of tunes
@@ -103,7 +103,7 @@ function PlayMelody {
             Start-Process $music_player -ArgumentList $($new_melody[1]) -RedirectStandardOutput ".\NUL"
         }
         catch {
-            Write-Host "An error occurred to run ABCplayer program: "
+            Write-Host "An error occurred to run AbcPlayer program: "
             Write-Host $_
         }
     } else {
