@@ -25,7 +25,7 @@
             Get-ExecutionPolicy -List
 
     ASSUMPTION:
-        - Using the latest version of Powershell (i.e. vesion 7 or above)
+        - Using the latest version of Powershell (i.e. version 7 or above)
             - PowerShell ISE will also work (as per Execution Policy above)
             - Default MSW PowerShell should work too (e.g. version 3 or 5)
         - Installed: ABC Player & Maestro (https://github.com/digero/maestro)
