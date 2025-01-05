@@ -12,7 +12,7 @@
     your desktop to run this script from any directory. Follow its prompts
     to create a new session of randomly selected melodies for listening.
 
-        e.g. ".\play_pack.ps1"
+        e.g. ".\jukebox.ps1"
     
     WARNING:
     If PowerShell script execution is blocked by your MSW security policy,
@@ -68,6 +68,7 @@ catch {
 }
 
 # Pick a random melody to test and verify.
+# TODO: convert to function
 try {
     $global:music_random = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
 }
@@ -89,7 +90,10 @@ foreach ($melody in $music_collection) {
 }
 $folder_array += "ALL"
 
-# Function: Select type of application to play *.abc files
+<#
+.SYNOPSIS
+    Function: Select type of application to play *.abc files
+#>
 function PlayMelody {
     # One parameter to pass into function.
     param (
@@ -120,7 +124,10 @@ function PlayMelody {
     return
 }
 
-# Function: See https://codepal.ai/code-generator/query/rY3Q5FYh/format-time-to-seconds
+<#
+.SYNOPSIS
+    Function: See https://codepal.ai/code-generator/query/rY3Q5FYh/format-time-to-seconds
+#>
 function FormatTimeToSecond {
     # One parameter to pass into function.
     param (
@@ -140,7 +147,10 @@ function FormatTimeToSecond {
     return $totalSeconds
 }
 
-# Function: Select a new melody then return an array of variables
+<#
+.SYNOPSIS
+    Function: Select a new melody then return an array of variables
+#>
 function NextMelody {
     # Condition checking (as per folder selection).
     if ($folder_array[[Int]$folder_pick] -match 'ALL') {
@@ -193,7 +203,10 @@ function NextMelody {
     return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
 
-# Use do - while loop to request from user which application to use.
+<#
+.SYNOPSIS
+    Use do - while loop to request from user which application to use.
+#>
 do {
     Clear-Host
     
@@ -212,7 +225,10 @@ do {
     if (-not $player_type) {$player_type = $def_player}
 } while (-not ($player_type -match '^\d?1|2'))
 
-# Use do - while loop to request from user which folder(s) to use.
+<#
+.SYNOPSIS
+    Use do - while loop to request from user which folder(s) to use.
+#>
 do {
     # Display folders to select.
     Write-Host "`nAvailable folders: "
@@ -230,7 +246,10 @@ do {
 
 } while (((-not ($folder_pick -match '^\d+$')) -AND ($folder_pick -le "$folder_array.Length")))
 
-# Use do - until loop to iterate through melodies until user input to exit.
+<#
+.SYNOPSIS
+    Use do - until loop to iterate through melodies until user input to exit.
+#>
 do {
     # Pick the next tune.
     $new_melody = NextMelody
