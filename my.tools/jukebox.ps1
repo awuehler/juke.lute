@@ -48,7 +48,7 @@
             - set default pause between each *.abc melody file
         - Track previous melodies to skip
             - to avoid repeats within a given folder of tunes
-        - Remove duplicate code and rewrite back-to-back duplicate checking
+        - Rewrite back-to-back duplicate checking
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - ...
 #>
@@ -110,6 +110,16 @@ function ProbabilityPick {
 
     try {
         $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
+        # Check for back to back duplicates.
+        # TODO: re-factor to remove duplicate code
+        if ($random_melody -eq $global:music_random) {
+            # NOTE: Back to back duplicates can still occur, BTW.
+            # This kluge is a basic hack to lower its probability.
+            $random_melody = ProbabilityPick $music_collection
+            $global:music_random = $random_melody
+        } else {
+            $global:music_random = $random_melody
+        }
     }
     catch {
         Write-Host "An error occurred to select a melody file..."
@@ -182,31 +192,12 @@ function NextMelody {
     # Condition checking (as per folder selection).
     if ($folder_array[[Int]$folder_pick] -match 'ALL') {
         $random_melody = ProbabilityPick $music_collection
-        # Check for back to back duplicates.
-        # TODO: re-factor to remove duplicate code
-        if ($random_melody -eq $global:music_random) {
-            # NOTE: Back to back duplicates can still occur, BTW.
-            # This kluge is a basic hack to lower its probability.
-            $random_melody = ProbabilityPick $music_collection
-            $global:music_random = $random_melody
-        } else {
-            $global:music_random = $random_melody
-        }
     }
     else {
         # Repeat the random melody pick until a tune from target folder is returned.
         do {
             $random_melody = ProbabilityPick $music_collection
-            # Check for back to back duplicates.
-            # TODO: re-factor to remove duplicate code
-            if ($random_melody -eq $global:music_random) {
-                # NOTE: Back to back duplicates can still occur, BTW.
-                # This kluge is a basic hack to lower its probability.
-                $random_melody = ProbabilityPick $music_collection
-                $global:music_random = $random_melody
-            } else {
-                $global:music_random = $random_melody
-            }
+
         # Include matching backslashes to restrict pattern matches to folder names only.
         } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
@@ -253,7 +244,7 @@ do {
     # Test user input (none vs. number) and assign default when null.
     if (-NOT $player_type) {$player_type = $def_player}
 
-} while (-NOT ($player_type -match '^\d?1|2'))
+} while (-NOT ([Int]$player_type -match '^\d?1|2'))
 
 <#
 .SYNOPSIS
