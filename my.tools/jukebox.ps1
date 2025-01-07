@@ -274,7 +274,7 @@ do {
     # Test user input (none vs. number) and assign default when null.
     if (-NOT $folder_pick) {$folder_pick = $def_folder}
 
-} while (-NOT (($folder_pick -match '^\d+$') -AND ($folder_pick -le $folder_array.Length - 1)) )
+} while (-NOT (([Int]$folder_pick -match '^\d+$') -AND ([Int]$folder_pick -le $folder_array.Length - 1)) )
 
 <#
 .SYNOPSIS
