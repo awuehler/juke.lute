@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Script to play a random list of *.abc files using AbcPlayer or Maestro
-    using the lute instrument (default).
+    for the lute instrument (default).
 
 .DESCRIPTION
     This script is used to open an ABC player to load a selected melody file
@@ -9,21 +9,20 @@
 
     It will repeat this task until user input to stop (exit) from the player.
 
-    Double-click to run this script or open a PowerShell console window on
-    your desktop to run this script from any directory. Follow its prompts
-    to create a new session of randomly selected melodies for listening.
+    Either use right-mouse click to "Run with Powershell" or open PowerShell
+    console window on your desktop to run this script from any directory.
 
         e.g. ".\jukebox.ps1"
     
     The default instrument (i.e. "X: 1" inside the *.abc file) is mapped to
     the "Lute Of Ages" instrument in both the AbcPlayer and Maestro programs.
         - Because the other %% lines added by Maestro have been removed
-          from the solo instrument *.abc files in the juke.lute folder
-          which were used to identify the other types of instruments
+          from the solo instrument *.abc files none of the other types
+          of instruments can be used to play these melody files via script
 
     WARNING:
     If PowerShell script execution is blocked by your MSW security policy,
-    then try the following steps to allow the execution of *.ps1 scripts:
+    then try the following steps to allow the execution of *.ps1 files:
 
         Start a new Powershell session as admin  i.e. "Run as administrator"
         Run the following commands:
@@ -97,6 +96,7 @@ foreach ($melody in $music_collection) {
         $folder_array += $file_folder
     }
 }
+# Include an all folders selection and use it as the default choice.
 $folder_array += "ALL"
 
 <#
