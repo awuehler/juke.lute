@@ -91,6 +91,7 @@ $folder_array = @()
 foreach ($melody in $music_collection) {
     $file_parent = Split-Path -Path "$melody" -Parent
     $file_folder = Split-Path -Path "$file_parent" -Leaf
+
     # Test to add unique folders only.
     if ($folder_array -NOTcontains $file_folder) {
         $folder_array += $file_folder
@@ -117,6 +118,11 @@ function ProbabilityPick {
 
     return $abc_pick
 }
+
+<#
+.SYNOPSIS
+    Start one of the ABC player programs and pass in the selected *.abc file.
+#>
 function PlayMelody {
     # One parameter to pass into function.
     param (
@@ -159,10 +165,8 @@ function FormatTimeToSecond {
 
     # Split the time values into minutes and seconds.
     $minutes, $seconds = $time -split ":"
-
     # Convert to seconds (integer).
     [Int]$minutes *= 60
-
     # Add minutes and seconds for total seconds (integer).
     $totalSeconds = [Int]$minutes + [Int]$seconds + [Int]$music_abc_title_pause
 
@@ -270,7 +274,7 @@ do {
     # Test user input (none vs. number) and assign default when null.
     if (-NOT $folder_pick) {$folder_pick = $def_folder}
 
-} while (-NOT ( ($folder_pick -match '^\d+$') -AND ($folder_pick -le $folder_array.Length - 1) ) )
+} while (-NOT (($folder_pick -match '^\d+$') -AND ($folder_pick -le $folder_array.Length - 1)) )
 
 <#
 .SYNOPSIS
