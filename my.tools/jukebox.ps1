@@ -115,7 +115,7 @@ function ProbabilityPick {
         if ($random_melody -eq $global:music_random) {
             # NOTE: Back to back duplicates can still occur, BTW.
             # This kluge is a basic hack to lower its probability.
-            $random_melody = ProbabilityPick $music_collection
+            $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
             $global:music_random = $random_melody
         } else {
             $global:music_random = $random_melody
