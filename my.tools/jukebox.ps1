@@ -9,11 +9,13 @@
 
     It will repeat this task until user input to stop (exit) from the player.
 
+.EXAMPLE
     Either use right-mouse click to "Run with Powershell" or open PowerShell
     console window on your desktop to run this script from any directory.
 
         e.g. ".\jukebox.ps1"
-    
+
+.NOTES
     The default instrument (i.e. "X: 1" inside the *.abc file) is mapped
     to the "Lute Of Ages" lute instrument in both AbcPlayer and Maestro.
         - the extra %% lines added by Maestro have been removed for
@@ -59,10 +61,10 @@
 # Add a pause between each music session.
 $music_abc_title_pause = 4
 
-# Capture the current username (assumes the default user location is used).
+# Capture the current username (assumes default user location).
 $music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
 
-# Define safe paths to each application (assumes the default install location is used).
+# Define safe paths to applications (assumes default install location).
 $music_player = """C:\Program Files (x86)\Maestro\AbcPlayer.exe"""
 $music_editor = """C:\Program Files (x86)\Maestro\Maestro.exe"""
 ################## End-User Modifications (if needed) ##################
@@ -86,7 +88,8 @@ catch {
     Write-Host $_
 }
 
-# Build an array list of sub folders within the juke box (assumes flat directory structure).
+# Build an array list of sub folders within the juke box
+# (assumes flat directory structure).
 $folder_array = @()
 # Find each (unique) folder across all *.abc files.
 foreach ($melody in $music_collection) {
@@ -103,7 +106,8 @@ $folder_array += "ALL"
 
 <#
 .SYNOPSIS
-    Pick a random melody to test and verify (assumes Get-Random is not pseudo random i.e. biased).
+    Pick a random melody to test and verify.
+    Assumes Get-Random is not pseudo random i.e. biased.
 #>
 function ProbabilityPick {
     param (
@@ -117,10 +121,10 @@ function ProbabilityPick {
             do {
                 $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
             } until (-NOT ($random_melody -eq $global:music_random))
-            $global:music_random = $random_melody
         } else {
             $global:music_random = $random_melody
         }
+        $global:music_random = $random_melody
     }
     catch {
         Write-Host "An error occurred to select a melody file..."
@@ -132,7 +136,7 @@ function ProbabilityPick {
 
 <#
 .SYNOPSIS
-    Start one of the ABC player programs and pass in the selected *.abc file.
+    Start an ABC player program and pass in the selected *.abc file.
 #>
 function PlayMelody {
     # One parameter to pass into function.
@@ -195,11 +199,12 @@ function NextMelody {
         $random_melody = ProbabilityPick $music_collection
     }
     else {
-        # Repeat the random melody pick until a tune from target folder is returned.
+        # Repeat the random melody pick until a tune from target folder.
         do {
             $random_melody = ProbabilityPick $music_collection
 
-        # Include matching backslashes to restrict pattern matches to folder names only.
+        # Include matching backslashes to restrict pattern matches
+        # to folder names only.
         } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
 
@@ -270,7 +275,8 @@ do {
 
 <#
 .SYNOPSIS
-    Use do - until loop to iterate through melodies until user input to exit.
+    Use do - until loop to iterate through melodies until user input
+    to exit.
 #>
 do {
     # Pick the next tune.
