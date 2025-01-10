@@ -112,11 +112,11 @@ function ProbabilityPick {
 
     try {
         $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-        if ($random_melody -match $global:music_random) {
+        if ($random_melody -eq $global:music_random) {
             # Repeat random selection until different tune is chosen.
             do {
                 $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-            } until (-NOT ($random_melody -match $global:music_random))
+            } until (-NOT ($random_melody -eq $global:music_random))
             $global:music_random = $random_melody
         } else {
             $global:music_random = $random_melody
