@@ -47,8 +47,8 @@
             - set default pause between each *.abc melody file
         - Track previous melodies to skip
             - to avoid repeats within a given folder of tunes
-        - Rewrite back-to-back duplicate checking
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
+        - Add check and application restart after N iterations
         - ...
 #>
 
@@ -110,12 +110,11 @@ function ProbabilityPick {
 
     try {
         $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-        # Check for back to back duplicates.
-        # TODO: re-factor to remove duplicate code
         if ($random_melody -eq $global:music_random) {
-            # NOTE: Back to back duplicates can still occur, BTW.
-            # This kluge is a basic hack to lower its probability.
-            $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
+            # Repeat random selection until different tune is chosen.
+            do {
+                $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
+            } until (-NOT ($random_melody -match $global:music_random))
             $global:music_random = $random_melody
         } else {
             $global:music_random = $random_melody
