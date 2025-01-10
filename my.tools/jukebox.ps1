@@ -121,10 +121,7 @@ function ProbabilityPick {
             do {
                 $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
             } until (-NOT ($random_melody -eq $global:music_random))
-#        } else {
-#            $global:music_random = $random_melody
         }
-#        $global:music_random = $random_melody
     }
     catch {
         Write-Host "An error occurred to select a melody file..."
@@ -280,10 +277,8 @@ do {
     to exit.
 #>
 do {
-    Write-Host $global:music_random
     # Pick the next tune.
     $new_melody = NextMelody
-    Write-Host $global:music_random
 
     # Display title and duration for upcoming melody
     Write-Host "`nPlaytime  : $($new_melody[5]) ($(FormatTimeToSecond $($new_melody[5])) seconds)"
