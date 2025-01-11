@@ -53,7 +53,6 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
-        - Review how to run application is background
         - ...
 #>
 
@@ -146,7 +145,7 @@ function PlayMelody {
     if ($abc_program -eq "1") {
         try {
             # Run player and send standard output to null.
-            Start-Process $music_player -ArgumentList $($new_melody[1]) -RedirectStandardOutput ".\NUL"
+            Start-Process $music_player -ArgumentList $($new_melody[1]) -RedirectStandardOutput ".\NUL" -WindowStyle Hidden
         }
         catch {
             Write-Host "An error occurred to run AbcPlayer program: "
@@ -155,7 +154,7 @@ function PlayMelody {
     } else {
         try {
             # Run editor and send standard output to null.
-            Start-Process $music_editor -ArgumentList $($new_melody[1]) -RedirectStandardOutput ".\NUL"
+            Start-Process $music_editor -ArgumentList $($new_melody[1]) -RedirectStandardOutput ".\NUL" -WindowStyle Hidden
         }
         catch {
             Write-Host "An error occurred to run Maestro program: "
