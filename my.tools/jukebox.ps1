@@ -53,6 +53,7 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
+        - Review how to run application is background
         - ...
 #>
 
@@ -233,7 +234,6 @@ function NextMelody {
 #>
 do {
     Clear-Host
-    
     # Request user input to confirm playback.
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     Write-Host "$music_player `t Press '1' for this option."
