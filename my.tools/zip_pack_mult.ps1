@@ -64,11 +64,36 @@
     Purge previous version of zip file.
 #>
 Write-Host
-Remove-Item -Path $MyDuetZipFile -Force
-Remove-Item -Path $MyFiddleZipFile -Force
-Remove-Item -Path $MyFluteZipFile -Force
-Remove-Item -Path $MyLuteZipFile -Force
-Remove-Item -Path $MyViolinZipFile -Force
+try {
+    Remove-Item -Path $MyDuetZipFile -Force -erroraction SilentlyContinue
+}
+catch {
+    <#Do this if a terminating exception happens#>
+}
+try {
+    Remove-Item -Path $MyFiddleZipFile -Force -erroraction SilentlyContinue
+}
+catch {
+    <#Do this if a terminating exception happens#>
+}
+try {
+    Remove-Item -Path $MyFluteZipFile -Force -erroraction SilentlyContinue
+}
+catch {
+    <#Do this if a terminating exception happens#>
+}
+try {
+    Remove-Item -Path $MyLuteZipFile -Force -erroraction SilentlyContinue
+}
+catch {
+    <#Do this if a terminating exception happens#>
+}
+try {
+    Remove-Item -Path $MyViolinZipFile -Force -erroraction SilentlyContinue
+}
+catch {
+    <#Do this if a terminating exception happens#>
+}
 
 <#
 .SYNOPSIS
