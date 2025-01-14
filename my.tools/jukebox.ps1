@@ -16,14 +16,6 @@
         e.g. ".\jukebox.ps1"
 
 .NOTES
-    The default instrument (i.e. "X: 1" inside the *.abc file) is mapped
-    to the "Lute Of Ages" lute instrument in both AbcPlayer and Maestro.
-        - the extra %% lines added by Maestro have been removed for
-          solo play which are used to map the other types of LOTRO
-          instruments
-        - so starting AbcPlayer and Maestro via script will always
-          begin using the lute instrument
-
     WARNING:
     If PowerShell script execution is blocked by your MSW security policy,
     then try the following steps to allow the execution of *.ps1 files:
@@ -53,6 +45,7 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
+        - Add support for other LOTRO instruments
         - ...
 #>
 
