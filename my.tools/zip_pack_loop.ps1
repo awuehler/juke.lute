@@ -62,58 +62,30 @@
 
 <#
 .SYNOPSIS
-    Use foreach loop to find zip files to remove.
+    Purge previous version of zip files.
 #>
 function PurgePrevious {
     param (
         $target_folder
     )
-    
+
+    # Catch the file extension name.
     $ZipFiles = Get-ChildItem -Path $target_folder
     foreach ($jukebox in $ZipFiles) {
-        if ($jukebox.) {
-            Write-Output $jukebox.FullName
+        $fileZip = Get-ChildItem -Path $jukebox | Select-Object -ExpandProperty Extension
+        if ($fileZip -eq ".zip") {
+            # Remove each *.zip file beforehand.
+            try {
+                Remove-Item -Path $jukebox -Force -erroraction SilentlyContinue
+            }
+            catch {
+                <# Do this if a terminating exception happens... #>
+            }
         }
     }
 }
 
 PurgePrevious $MyParentDirectory\999.songs\
-
-<#
-.SYNOPSIS
-    Purge previous version of zip file.
-#>
-Write-Host
-try {
-    Remove-Item -Path $MyDuetZipFile -Force -erroraction SilentlyContinue
-}
-catch {
-    <#Do this if a terminating exception happens#>
-}
-try {
-    Remove-Item -Path $MyFiddleZipFile -Force -erroraction SilentlyContinue
-}
-catch {
-    <#Do this if a terminating exception happens#>
-}
-try {
-    Remove-Item -Path $MyFluteZipFile -Force -erroraction SilentlyContinue
-}
-catch {
-    <#Do this if a terminating exception happens#>
-}
-try {
-    Remove-Item -Path $MyLuteZipFile -Force -erroraction SilentlyContinue
-}
-catch {
-    <#Do this if a terminating exception happens#>
-}
-try {
-    Remove-Item -Path $MyViolinZipFile -Force -erroraction SilentlyContinue
-}
-catch {
-    <#Do this if a terminating exception happens#>
-}
 
 <#
 .SYNOPSIS

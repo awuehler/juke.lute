@@ -224,10 +224,7 @@ foreach ($melody in $music_collection) {
 # Include an all folders selection and use it as the default choice.
 $folder_array += "ALL"
 
-<#
-.SYNOPSIS
-    Use do - while loop to request from user which application to use.
-#>
+# Use do - while loop to request from user which application to use.
 do {
     Clear-Host
     # Request user input to confirm playback.
@@ -246,10 +243,7 @@ do {
 
 } while (-NOT ([Int]$player_type -match '^\d?1|2'))
 
-<#
-.SYNOPSIS
-    Use do - while loop to request from user which folder(s) to use.
-#>
+# Use do - while loop to request from user which folder(s) to use.
 do {
     # Display folders to select.
     Write-Host "`nAvailable folders: "
@@ -267,11 +261,7 @@ do {
 
 } while (-NOT (([Int]$folder_pick -match '^\d+$') -AND ([Int]$folder_pick -le $folder_array.Length - 1)))
 
-<#
-.SYNOPSIS
-    Use do - until loop to iterate through melodies until user input
-    to exit.
-#>
+# Use do - until loop to iterate through melodies until user input to exit.
 do {
     # Pick the next tune.
     $new_melody = NextMelody
