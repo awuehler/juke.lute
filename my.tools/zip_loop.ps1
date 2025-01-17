@@ -13,6 +13,7 @@
         e.g. ".\zip_loop.ps1"
 
 .NOTES
+    WARNING:
     If PowerShell script execution is blocked by the local security
     policy, then try the following steps to allow:
 
@@ -70,7 +71,7 @@ function PurgePrevious {
         $target_action     # "console"
     )
 
-    # Collect all files contained within the folder
+    # Collect all files contained within the folder.
     $ZipFiles = Get-ChildItem -Path $target_folder
     foreach ($jukebox in $ZipFiles) {
         $fileZip = Get-ChildItem -Path $jukebox | Select-Object -ExpandProperty Extension
@@ -78,7 +79,7 @@ function PurgePrevious {
         if ($fileZip -eq ".zip") {
             # Check for which action to process.
             if ($target_action -eq "purge") {
-                # Remove each *.zip file beforehand.
+                # Remove each ZIP file beforehand.
                 try {
                     Remove-Item -Path $jukebox -Force -erroraction SilentlyContinue
                 }
@@ -92,6 +93,15 @@ function PurgePrevious {
     }
 }
 
+########################################################################
+################ Main Body (Console, Data, User Input) #################
+########################################################################
+
+Clear-Host
+# Display summary of the ZIP files. (before)
+Write-Host "BEFORE:"
+PurgePrevious $MyParentDirectory\999.songs\ console
+# Remove current ZIP files.
 Write-Host
 PurgePrevious $MyParentDirectory\999.songs\ purge
 
@@ -140,5 +150,6 @@ $compressVIOLIN = @{
     }
 Compress-Archive @compressVIOLIN -Update
 
-Write-Host
+# Display summary of the ZIP files. (after)
+Write-Host "AFTER:"
 PurgePrevious $MyParentDirectory\999.songs\ console
