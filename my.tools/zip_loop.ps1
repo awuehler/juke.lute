@@ -1,20 +1,20 @@
 <#
 .SYNOPSIS
-    Script to package a tune folder into a zip file.
+    Script to package each instrument folder into a separate zip file.
 
 .DESCRIPTION
-    Automate the steps to include any updated files in the
-    compressed package for upload to target.
+    Automate the steps to add the updated *.abc files into compressed
+    package for upload to target.
 
 .EXAMPLE
-    Run this script after each and every music modification
-    to maintain an up to date zip file of tunes.
+    Run this script after each and every music modification to maintain
+    an up to date zip file of tunes.
 
-        e.g. ".\zip_pack.ps1"
+        e.g. ".\zip_loop.ps1"
 
 .NOTES
-    If PowerShell script execution is blocked by the local
-    security policy, then try the following steps to allow:
+    If PowerShell script execution is blocked by the local security
+    policy, then try the following steps to allow:
 
         Start a new Powershell session as admin  i.e. "Run as administrator"
         Run the following commands:
@@ -66,26 +66,34 @@
 #>
 function PurgePrevious {
     param (
-        $target_folder
+        $target_folder,    # "purge"
+        $target_action     # "console"
     )
 
-    # Catch the file extension name.
+    # Collect all files contained within the folder
     $ZipFiles = Get-ChildItem -Path $target_folder
     foreach ($jukebox in $ZipFiles) {
         $fileZip = Get-ChildItem -Path $jukebox | Select-Object -ExpandProperty Extension
+        # Limit to ZIP files.
         if ($fileZip -eq ".zip") {
-            # Remove each *.zip file beforehand.
-            try {
-                Remove-Item -Path $jukebox -Force -erroraction SilentlyContinue
-            }
-            catch {
-                <# Do this if a terminating exception happens... #>
+            # Check for which action to process.
+            if ($target_action -eq "purge") {
+                # Remove each *.zip file beforehand.
+                try {
+                    Remove-Item -Path $jukebox -Force -erroraction SilentlyContinue
+                }
+                catch {
+                    <# Do this if a terminating exception happens... #>
+                }
+            } elseif ($target_action -eq "console") {
+                 Get-ItemProperty -Path $jukebox
             }
         }
     }
 }
 
-PurgePrevious $MyParentDirectory\999.songs\
+Write-Host
+PurgePrevious $MyParentDirectory\999.songs\ purge
 
 <#
 .SYNOPSIS
@@ -132,28 +140,5 @@ $compressVIOLIN = @{
     }
 Compress-Archive @compressVIOLIN -Update
 
-<#
-.SYNOPSIS
-    Standard output for user confirmation.
-#>
 Write-Host
-Write-Host $compressDUET
-Get-ItemProperty -Path $MyDuetZipFile
-Write-Host
-Write-Host
-Write-Host $compressFIDDLE
-Get-ItemProperty -Path $MyFiddleZipFile
-Write-Host
-Write-Host
-Write-Host $compressFLUTE
-Get-ItemProperty -Path $MyFluteZipFile
-Write-Host
-Write-Host
-Write-Host $compressLUTE
-Get-ItemProperty -Path $MyLuteZipFile
-Write-Host
-Write-Host
-Write-Host $compressVIOLIN
-Get-ItemProperty -Path $MyViolinZipFile
-Write-Host
-
+PurgePrevious $MyParentDirectory\999.songs\ console
