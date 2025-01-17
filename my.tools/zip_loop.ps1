@@ -8,7 +8,7 @@
 
 .EXAMPLE
     Run this script after each and every music modification to maintain
-    an up to date zip file of tunes.
+    an up to date zip file of tunes from CWD: ..\juke.lute\my.tools
 
         e.g. ".\zip_loop.ps1"
 
@@ -23,10 +23,15 @@
             Set-ExecutionPolicy Unrestricted
             Get-ExecutionPolicy -List
 
+    ASSUMPTION:
+        - Using the latest version of Powershell (i.e. version 7 or above)
+            - PowerShell ISE will also work (as per Execution Policy above)
+            - Default MSW PowerShell should work too (e.g. version 3 or 5)
+        - Cloned: https://github.com/awuehler/juke.lute (i.e. this repository)
+
     TODO:
-        - Add option to submit the actual path to the Music folder
+        - Add option to submit the actual path to the LOTRO Music folder
             to remove the assumption for user edits to fix pathing issues
-        - Support multiple juke.* folders
         - Rewrite to use an array of sub folders to generate zip files
 #>
 
@@ -63,9 +68,9 @@
 
 <#
 .SYNOPSIS
-    Purge previous version of zip files.
+    Target the previous version of ZIP files.
 #>
-function PurgePrevious {
+function TargetPrevious {
     param (
         $target_folder,    # "purge"
         $target_action     # "console"
@@ -100,10 +105,10 @@ function PurgePrevious {
 Clear-Host
 # Display summary of the ZIP files. (before)
 Write-Host "BEFORE:"
-PurgePrevious $MyParentDirectory\999.songs\ console
+TargetPrevious "$MyParentDirectory\999.songs\" "console"
 # Remove current ZIP files.
 Write-Host
-PurgePrevious $MyParentDirectory\999.songs\ purge
+TargetPrevious "$MyParentDirectory\999.songs\" "purge"
 
 <#
 .SYNOPSIS
@@ -152,4 +157,4 @@ Compress-Archive @compressVIOLIN -Update
 
 # Display summary of the ZIP files. (after)
 Write-Host "AFTER:"
-PurgePrevious $MyParentDirectory\999.songs\ console
+TargetPrevious "$MyParentDirectory\999.songs\" "console"
