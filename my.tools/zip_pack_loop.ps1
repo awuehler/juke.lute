@@ -62,6 +62,25 @@
 
 <#
 .SYNOPSIS
+    Use foreach loop to find zip files to remove.
+#>
+function PurgePrevious {
+    param (
+        $target_folder
+    )
+    
+    $ZipFiles = Get-ChildItem -Path $target_folder
+    foreach ($jukebox in $ZipFiles) {
+        if ($jukebox.) {
+            Write-Output $jukebox.FullName
+        }
+    }
+}
+
+PurgePrevious $MyParentDirectory\999.songs\
+
+<#
+.SYNOPSIS
     Purge previous version of zip file.
 #>
 Write-Host

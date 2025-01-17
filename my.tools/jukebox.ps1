@@ -63,40 +63,6 @@ $music_editor = """C:\Program Files (x86)\Maestro\Maestro.exe"""
 ################## End-User Modifications (if needed) ##################
 ########################################################################
 
-# Build an array list of melody files.
-try {
-    $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File | Select-Object -Property FullName )
-}
-catch {
-    Write-Host "An error occurred to juke.lute: "
-    Write-Host $_
-}
-
-# Seed an initial random pick for test and verify.
-try {
-    $global:music_random = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
-}
-catch {
-    Write-Host "An error occurred to select a melody file..."
-    Write-Host $_
-}
-
-# Build an array list of sub folders within the juke box
-# (assumes flat directory structure).
-$folder_array = @()
-# Find each (unique) folder across all *.abc files.
-foreach ($melody in $music_collection) {
-    $file_parent = Split-Path -Path "$melody" -Parent
-    $file_folder = Split-Path -Path "$file_parent" -Leaf
-
-    # Test to add unique folders only.
-    if ($folder_array -NOTcontains $file_folder) {
-        $folder_array += $file_folder
-    }
-}
-# Include an all folders selection and use it as the default choice.
-$folder_array += "ALL"
-
 <#
 .SYNOPSIS
     Pick a random melody to test and verify.
@@ -219,6 +185,44 @@ function NextMelody {
     # Return an array of values.
     return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
+
+########################################################################
+################ Main Body (Console, Data, User Input) #################
+########################################################################
+
+# Build an array list of melody files.
+try {
+    $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File | Select-Object -Property FullName )
+}
+catch {
+    Write-Host "An error occurred to juke.lute: "
+    Write-Host $_
+}
+
+# Seed an initial random pick for test and verify.
+try {
+    $global:music_random = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
+}
+catch {
+    Write-Host "An error occurred to select a melody file..."
+    Write-Host $_
+}
+
+# Build an array list of sub folders within the juke box
+# (assumes flat directory structure).
+$folder_array = @()
+# Find each (unique) folder across all *.abc files.
+foreach ($melody in $music_collection) {
+    $file_parent = Split-Path -Path "$melody" -Parent
+    $file_folder = Split-Path -Path "$file_parent" -Leaf
+
+    # Test to add unique folders only.
+    if ($folder_array -NOTcontains $file_folder) {
+        $folder_array += $file_folder
+    }
+}
+# Include an all folders selection and use it as the default choice.
+$folder_array += "ALL"
 
 <#
 .SYNOPSIS
