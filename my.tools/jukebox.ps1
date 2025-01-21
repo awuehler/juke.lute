@@ -51,7 +51,7 @@
 ########################################################################
 ################## End-User Modifications (if needed) ##################
 # Add a delay between each melody selection, plus the recursive latency.
-$music_abc_title_pause = 8
+$music_abc_title_pause = 5
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
@@ -173,11 +173,11 @@ function NextMelody {
     # Extract title (limit to first occurence).
     $music_abc_title         = ( Select-String -Path $random_melody -Pattern '^T: ' | Select-Object -First 1 )
     $music_abc_title_string  = $music_abc_title.ToString()
-    #$music_abc_title_length  = $music_abc_title_string.Length
-    #$music_abc_title_length -= 9
+    $music_abc_title_length  = $music_abc_title_string.Length
+    $music_abc_title_length -= 9
     
     # Extract time (don't assume duration is located at end of Title line).
-    #$music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
+    $music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
     #$music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
     $music_abc_title_time  = ( $music_abc_title_string  -replace '.*\(' -replace '\).*' )
 
