@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Automate the steps to add the updated *.abc files into compressed
-    package for upload to target.
+    packages for upload to a target i.e. GitHub.
 
 .EXAMPLE
     Run this script after each and every music modification to maintain
@@ -68,6 +68,17 @@
 
 <#
 .SYNOPSIS
+    Discover available juke folders.
+#>
+function JukeFolders {
+    param (
+        OptionalParameters
+    )
+    # ...
+}
+
+<#
+.SYNOPSIS
     Target the previous version of ZIP files.
 #>
 function TargetPrevious {
@@ -75,7 +86,6 @@ function TargetPrevious {
         $target_folder,
         $target_action     # "console" or "purge"
     )
-
     # Collect all files contained within the folder.
     $ZipFiles = Get-ChildItem -Path $target_folder
     foreach ($jukebox in $ZipFiles) {

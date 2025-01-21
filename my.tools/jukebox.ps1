@@ -31,7 +31,8 @@
             - PowerShell ISE will also work (as per Execution Policy above)
             - Default MSW PowerShell should work too (e.g. version 3 or 5)
         - Installed: ABC Player & Maestro (https://github.com/digero/maestro)
-        - Installed: juke.lute (C:\Users\***\Documents\The Lord of the Rings Online\Music)
+        - Installed: At least one juke.<instrument>.zip is downloaded and put
+            into C:\Users\***\Documents\The Lord of the Rings Online\Music
         - Title field in each *.abc file contains duration i.e. "T: ...(mm:ss)..."
         - ...
 
@@ -51,7 +52,7 @@
 ########################################################################
 ################## End-User Modifications (if needed) ##################
 # Add a delay between each melody selection, plus the recursive latency.
-$music_abc_title_pause = 5
+$music_abc_title_pause = 3
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
@@ -73,7 +74,6 @@ function ProbabilityPick {
     param (
         $abc_list
     )
-
     try {
         $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
         if ($random_melody -eq $global:music_random) {
@@ -87,7 +87,6 @@ function ProbabilityPick {
         Write-Host "An error occurred to select a melody file..."
         Write-Host $_
     }
-
     return $abc_pick
 }
 
@@ -100,7 +99,6 @@ function PlayMelody {
     param (
         $abc_program
     )
-
     # Run application based on user input. 
     if ($abc_program -eq "1") {
         try {
@@ -121,7 +119,6 @@ function PlayMelody {
             Write-Host $_
         }
     }
-
     return
 }
 
@@ -134,14 +131,12 @@ function FormatTimeToSecond {
     param (
         [string]$time
     )
-
     # Split the time values into minutes and seconds.
     $minutes, $seconds = $time -split ":"
     # Convert to seconds (integer).
     [Int]$minutes *= 60
     # Add minutes and seconds for total seconds (integer).
     $totalSeconds = [Int]$minutes + [Int]$seconds + [Int]$music_abc_title_pause
-
     # Return total duration with included pause between melodies.
     return $totalSeconds
 }
@@ -159,31 +154,25 @@ function NextMelody {
         # Repeat the random melody pick until a tune from target folder.
         do {
             $random_melody = ProbabilityPick $music_collection
-
         # Include matching backslashes to restrict pattern matches
         # to folder names only.
         } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
     $global:music_random = $random_melody
-
     # Set sheltering for parameter placement.
     $music_maestro = """" + ( $random_melody ) + """"
     $music_content = "'"  + ( $random_melody ) + "'"
-
     # Extract title (limit to first occurence).
     $music_abc_title         = ( Select-String -Path $random_melody -Pattern '^T: ' | Select-Object -First 1 )
     $music_abc_title_string  = $music_abc_title.ToString()
     $music_abc_title_length  = $music_abc_title_string.Length
     $music_abc_title_length -= 9
-    
     # Extract time (don't assume duration is located at end of Title line).
     $music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
     #$music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
     $music_abc_title_time  = ( $music_abc_title_string  -replace '.*\(' -replace '\).*' )
-
     # Remove new selection from collection.
     #$music_collection = $music_collection | ? {$_.Server -ne $random_melody}
-
     # Return an array of values.
     return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
@@ -217,7 +206,6 @@ $folder_array = @()
 foreach ($melody in $music_collection) {
     $file_parent = Split-Path -Path "$melody" -Parent
     $file_folder = Split-Path -Path "$file_parent" -Leaf
-
     # Test to add unique folders only.
     if ($folder_array -NOTcontains $file_folder) {
         $folder_array += $file_folder
@@ -235,14 +223,12 @@ do {
     Write-Host "$music_editor `t Press '2' for this option."
     Write-Host "(NOTE:  Edit this script to change default paths or pause between melodies)" -ForegroundColor Blue
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
-
     # Set default selection to "PLAYER" program.
     $def_player = "1"
     # Capture user selection for re-use.
     $player_type = Read-Host "Please enter which player to use (default is AbcPlayer)"
     # Test user input (none vs. number) and assign default when null.
     if (-NOT $player_type) {$player_type = $def_player}
-
 } while (-NOT ([Int]$player_type -match '^\d?1|2'))
 
 # Use do - while loop to request from user which folder(s) to use.
@@ -253,32 +239,25 @@ do {
         $ndx = $folder_array.IndexOf("$tune")
         Write-Host "[$ndx]$($tune.ToUpper())  " -NoNewline
     }
-
     # Set default selection to "ALL" folders.
     $def_folder = [Int]$folder_array.IndexOf('ALL')
     # Capture user selection, if any index number is entered
     $folder_pick = Read-Host ("`nPlease enter the number for which folder to use (default is [{0}]ALL)" -f $def_folder)
     # Test user input (none vs. number) and assign default when null.
     if (-NOT $folder_pick) {$folder_pick = $def_folder}
-
 } while (-NOT (([Int]$folder_pick -match '^\d+$') -AND ([Int]$folder_pick -le $folder_array.Length - 1)))
 
 # Use do - until loop to iterate through melodies until user input to exit.
 do {
     # Pick the next tune.
     $new_melody = NextMelody
-
     # Display title and duration for upcoming melody
     Write-Host "`nPlaytime  : $($new_melody[5]) ($(FormatTimeToSecond $($new_melody[5])) seconds)"
     Write-Host "Selection : $(Split-Path -Path "$($new_melody[0])" -Leaf) ($(Split-Path -Path $(Split-Path -Path "$($new_melody[0])" -Parent) -Leaf))"
-
     # Run player and send standard output to null.
     PlayMelody $player_type
-
     #Write-Host "To Skip   : Use TBD key to jump to next melody. "
     Write-Host "To Stop   : Use CTRL-C key to exit the jukebox."
-
     # TODO: Change to support continue to next melody.
     Start-Sleep -Seconds $(FormatTimeToSecond $($new_melody[5]))
-
 } until ([System.Console]::KeyAvailable)
