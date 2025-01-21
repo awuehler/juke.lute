@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-    Script to play a random sequence of *.abc files with AbcPlayer or Maestro
-    for the lute (default).
+    Script to play a random sequence of ABC files with AbcPlayer or Maestro
+    kept in any folder(s) contained under the default LOTRO Music folder.
 
 .DESCRIPTION
     This script is used to open an ABC player to load a random melody file
@@ -45,17 +45,18 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
-        - Add support for other LOTRO instruments
         - ...
 #>
 
 ########################################################################
 ################## End-User Modifications (if needed) ##################
-# Add a pause between each music session.
-$music_abc_title_pause = 4
+# Add a delay between each melody selection, plus the recursive latency.
+$music_abc_title_pause = 8
 
 # Capture the current username (assumes default user location).
-$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
+#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
+#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
+$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
 
 # Define safe paths to applications (assumes default install location).
 $music_player = """C:\Program Files (x86)\Maestro\AbcPlayer.exe"""
@@ -169,15 +170,16 @@ function NextMelody {
     $music_maestro = """" + ( $random_melody ) + """"
     $music_content = "'"  + ( $random_melody ) + "'"
 
-    # Extract title.
-    $music_abc_title         = ( Select-String -Path $random_melody -Pattern '^T: ' )
+    # Extract title (limit to first occurence).
+    $music_abc_title         = ( Select-String -Path $random_melody -Pattern '^T: ' | Select-Object -First 1 )
     $music_abc_title_string  = $music_abc_title.ToString()
-    $music_abc_title_length  = $music_abc_title_string.Length
-    $music_abc_title_length -= 9
+    #$music_abc_title_length  = $music_abc_title_string.Length
+    #$music_abc_title_length -= 9
     
-    # Extract time.
-    $music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
-    $music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
+    # Extract time (don't assume duration is located at end of Title line).
+    #$music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
+    #$music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
+    $music_abc_title_time  = ( $music_abc_title_string  -replace '.*\(' -replace '\).*' )
 
     # Remove new selection from collection.
     #$music_collection = $music_collection | ? {$_.Server -ne $random_melody}
