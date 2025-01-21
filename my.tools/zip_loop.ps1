@@ -72,8 +72,8 @@
 #>
 function TargetPrevious {
     param (
-        $target_folder,    # "purge"
-        $target_action     # "console"
+        $target_folder,
+        $target_action     # "console" or "purge"
     )
 
     # Collect all files contained within the folder.
