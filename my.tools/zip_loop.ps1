@@ -70,12 +70,12 @@
 .SYNOPSIS
     Discover available juke folders.
 #>
-function JukeFolders {
-    param (
-        OptionalParameters
-    )
-    # ...
-}
+#function JukeFolders {
+#    param (
+#        OptionalParameters
+#    )
+#    # ...
+#}
 
 <#
 .SYNOPSIS
@@ -166,5 +166,5 @@ $compressVIOLIN = @{
 Compress-Archive @compressVIOLIN -Update
 
 # Display summary of the ZIP files. (after)
-Write-Host "AFTER:"
+Write-Host "AFTER:`n"
 TargetPrevious "$MyParentDirectory\999.songs\" "console"
