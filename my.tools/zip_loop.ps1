@@ -28,11 +28,13 @@
             - PowerShell ISE will also work (as per Execution Policy above)
             - Default MSW PowerShell should work too (e.g. version 3 or 5)
         - Cloned: https://github.com/awuehler/juke.lute (i.e. this repository)
+        - Default LOTRO Music folder is located under the C:\ drive
+        - ...
 
     TODO:
         - Add option to submit the actual path to the LOTRO Music folder
             to remove the assumption for user edits to fix pathing issues
-        - Rewrite to use an array of sub folders to generate zip files
+        - ...
 #>
 
 <#
@@ -43,39 +45,28 @@
 [string]$MyCompression          = "NoCompression" # Fastest / NoCompression / Optimal
 [string]$MyWorkingDirectory     = $(Get-Location)
 [string]$MyParentDirectory      = Split-Path -Path $MyWorkingDirectory -Parent
-[string]$MyAbcDirectory         = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\"
-
-# Setup each folder.
-[string]$MyDuetDirectory        = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.duet\"
-[string]$MyDuetLeafDirectory    = Split-Path -Path $MyDuetDirectory -Leaf
-[string]$MyDuetZipFile          = "$MyParentDirectory\999.songs\$MyDuetLeafDirectory.zip"
-
-[string]$MyFiddleDirectory      = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.fiddle\"
-[string]$MyFiddleLeafDirectory  = Split-Path -Path $MyFiddleDirectory -Leaf
-[string]$MyFiddleZipFile        = "$MyParentDirectory\999.songs\$MyFiddleLeafDirectory.zip"
-
-[string]$MyFluteDirectory       = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.flute\"
-[string]$MyFluteLeafDirectory   = Split-Path -Path $MyFluteDirectory -Leaf
-[string]$MyFluteZipFile         = "$MyParentDirectory\999.songs\$MyFluteLeafDirectory.zip"
-
-[string]$MyLuteDirectory        = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.lute\"
-[string]$MyLuteLeafDirectory    = Split-Path -Path $MyLuteDirectory -Leaf
-[string]$MyLuteZipFile          = "$MyParentDirectory\999.songs\$MyLuteLeafDirectory.zip"
-
-[string]$MyViolinDirectory      = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\juke.violin\"
-[string]$MyViolinLeafDirectory  = Split-Path -Path $MyViolinDirectory -Leaf
-[string]$MyViolinZipFile        = "$MyParentDirectory\999.songs\$MyViolinLeafDirectory.zip"
+[string]$MyAbcDirectory         = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
 
 <#
 .SYNOPSIS
     Discover available juke folders.
 #>
-#function JukeFolders {
-#    param (
-#        OptionalParameters
-#    )
-#    # ...
-#}
+function JukeFolders {
+    # Collect all juke music folders.
+    $AbcFolders = Get-ChildItem -Path $MyAbcDirectory
+    # Iterate through each child object.
+    foreach ($JukeInstrument in $AbcFolders) {
+        # Limit to folders that begin with "juke".
+        if ((Split-Path -Path $JukeInstrument -Leaf) -like "juke*") {
+            # Compression parameters.
+            $SourcePath            = "$MyParentDirectory\..\..\Documents\The Lord of the Rings Online\Music\$(Split-Path -Path $JukeInstrument -Leaf)\"
+            $TargetDestinationPath = "$MyParentDirectory\999.songs\$(Split-Path -Path $JukeInstrument -Leaf).zip"
+            $ZipCompressionLevel   = "$MyCompression"
+            # Create a new ZIP archive.
+            Compress-Archive -Path $SourcePath -DestinationPath $TargetDestinationPath -CompressionLevel $ZipCompressionLevel -Update
+        }
+    }
+}
 
 <#
 .SYNOPSIS
@@ -112,58 +103,19 @@ function TargetPrevious {
 ################ Main Body (Console, Data, User Input) #################
 ########################################################################
 
+# Clear the PowerShell console window.
 Clear-Host
+
 # Display summary of the ZIP files. (before)
 Write-Host "BEFORE:"
 TargetPrevious "$MyParentDirectory\999.songs\" "console"
+
 # Remove current ZIP files.
 Write-Host
 TargetPrevious "$MyParentDirectory\999.songs\" "purge"
 
-<#
-.SYNOPSIS
-    As per:
-    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/compress-archive?view=powershell-7.3
-
-    Assumptions:
-        - an up to date PowerShell environment is in use
-        - overwrite the existing zip file when present
-#>
-# juke.duet
-$compressDUET = @{
-    Path             = "$MyDuetDirectory"
-    CompressionLevel = "$MyCompression"
-    DestinationPath  = "$MyDuetZipFile"
-    }
-Compress-Archive @compressDUET -Update
-# juke.fiddle
-$compressFIDDLE = @{
-    Path             = "$MyFiddleDirectory"
-    CompressionLevel = "$MyCompression"
-    DestinationPath  = "$MyFiddleZipFile"
-    }
-Compress-Archive @compressFIDDLE -Update
-# juke.flute
-$compressFLUTE = @{
-    Path             = "$MyFluteDirectory"
-    CompressionLevel = "$MyCompression"
-    DestinationPath  = "$MyFluteZipFile"
-    }
-Compress-Archive @compressFLUTE -Update
-# juke.lute
-$compressLUTE = @{
-    Path             = "$MyLuteDirectory"
-    CompressionLevel = "$MyCompression"
-    DestinationPath  = "$MyLuteZipFile"
-    }
-Compress-Archive @compressLUTE -Update
-# juke.violin
-$compressVIOLIN = @{
-    Path             = "$MyViolinDirectory"
-    CompressionLevel = "$MyCompression"
-    DestinationPath  = "$MyViolinZipFile"
-    }
-Compress-Archive @compressVIOLIN -Update
+# Generate new ZIP files.
+JukeFolders
 
 # Display summary of the ZIP files. (after)
 Write-Host "AFTER:`n"
