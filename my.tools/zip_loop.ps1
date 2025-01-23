@@ -111,7 +111,7 @@ Write-Host "BEFORE:"
 TargetPrevious "$MyParentDirectory\999.songs\" "console"
 
 # Remove current ZIP files.
-Write-Host
+Write-Host "`n"
 TargetPrevious "$MyParentDirectory\999.songs\" "purge"
 
 # Generate new ZIP files.

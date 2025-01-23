@@ -56,8 +56,8 @@ $music_abc_title_pause = 3
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
-$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
-#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
+#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
+$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
 
 # Define safe paths to applications (assumes default install location).
 $music_player = """C:\Program Files (x86)\Maestro\AbcPlayer.exe"""
