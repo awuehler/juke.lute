@@ -76,11 +76,11 @@ function ProbabilityPick {
     )
     try {
         $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-        if ($random_melody -eq $global:music_random) {
+        if ($random_melody -eq $global:PreviousMelody) {
             # Repeat random selection until different tune is chosen.
             do {
                 $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-            } until (-NOT ($random_melody -eq $global:music_random))
+            } until (-NOT ($random_melody -eq $global:PreviousMelody))
         }
     }
     catch {
@@ -158,7 +158,8 @@ function NextMelody {
         # to folder names only.
         } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
-    $global:music_random = $random_melody
+    # Track the new melody selection.
+    $global:PreviousMelody = $random_melody
     # Set sheltering for parameter placement.
     $music_maestro = """" + ( $random_melody ) + """"
     $music_content = "'"  + ( $random_melody ) + "'"
@@ -192,15 +193,16 @@ catch {
 
 # Seed an initial random pick for test and verify.
 try {
-    $global:music_random = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
+    $global:PreviousMelody = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
 }
 catch {
     Write-Host "An error occurred to select a melody file..."
     Write-Host $_
 }
 
-# Build an array list of sub folders within the juke box
-# (assumes flat directory structure).
+# Build a list of sub folders within the juke box(es).
+# NOTE: The use of duplicate sub folder names inside the separate juke
+#       boxes are not tracked separately the following array structure. 
 $folder_array = @()
 # Find each (unique) folder across all *.abc files.
 foreach ($melody in $music_collection) {
