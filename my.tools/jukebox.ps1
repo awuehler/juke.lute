@@ -184,6 +184,11 @@ function NextMelody {
 
 # Build an array list of melody files.
 try {
+    # NOTE: if additional non-juke ABC files are found, they will also be
+    #       indexed. And if they don't meet the assumptions noted above
+    #       about an accurate ...(mm:ss)... playtime duration included in
+    #       the T: ... title field then roll-over to the next melody will
+    #       incorrect.
     $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File | Select-Object -Property FullName )
 }
 catch {
@@ -198,11 +203,12 @@ try {
 catch {
     Write-Host "An error occurred to select a melody file..."
     Write-Host $_
+    Write-Host "PreviousMelody Value: $global:PreviousMelody"
 }
 
 # Build a list of sub folders within the juke box(es).
 # NOTE: The use of duplicate sub folder names inside the separate juke
-#       boxes are not tracked separately the following array structure. 
+#       boxes are not tracked separately in following array structure. 
 $folder_array = @()
 # Find each (unique) folder across all *.abc files.
 foreach ($melody in $music_collection) {
