@@ -46,6 +46,8 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
+        - Set default duration to 1:00 and use it when missing from title field
+        - Confirm music folder location and check for +1 juke folders
         - ...
 #>
 
@@ -56,8 +58,8 @@ $music_abc_title_pause = 3
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
-#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
-$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
+$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
+#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
 
 # Define safe paths to applications (assumes default install location).
 $music_player = """C:\Program Files (x86)\Maestro\AbcPlayer.exe"""
@@ -228,8 +230,9 @@ do {
     # Request user input to confirm playback.
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     Write-Host "$music_player `t Press '1' for this option."
-    Write-Host "$music_editor `t Press '2' for this option."
-    Write-Host "(NOTE:  Edit this script to change default paths or pause between melodies)" -ForegroundColor Blue
+    Write-Host "$music_editor `t Press '2' for this option.`n"
+    Write-Host "NOTE:    Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
+    Write-Host "DEFAULT: $music_abc_path" -ForegroundColor Blue
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     # Set default selection to "PLAYER" program.
     $def_player = "1"
