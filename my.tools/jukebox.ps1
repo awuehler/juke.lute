@@ -56,6 +56,9 @@
 # Add a delay between each melody selection, plus the recursive latency.
 $music_abc_title_pause = 3
 
+# Fallback duration when the Title key:value pair is missing (mm:ss). 
+$music_abc_title_time2 = '(0:33)'
+
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
@@ -174,6 +177,10 @@ function NextMelody {
     $music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
     #$music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
     $music_abc_title_time  = ( $music_abc_title_string  -replace '.*\(' -replace '\).*' )
+    # Confirm if a proper duration was extracted from the title.
+    if ($music_abc_title_time -notlike "*:*") {
+        $music_abc_title_time = $music_abc_title_time2
+    }
     # Remove new selection from collection.
     #$music_collection = $music_collection | ? {$_.Server -ne $random_melody}
     # Return an array of values.
@@ -191,7 +198,7 @@ try {
     #       about an accurate ...(mm:ss)... playtime duration included in
     #       the T: ... title field then roll-over to the next melody will
     #       incorrect.
-    $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File | Select-Object -Property FullName )
+    $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File -Filter "*.abc" | Select-Object -Property FullName )
 }
 catch {
     Write-Host "An error occurred to juke.lute: "
