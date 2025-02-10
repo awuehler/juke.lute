@@ -7,7 +7,7 @@
     This script is used to open an ABC player to load a random melody file
     for output to the default audio end point (earbud, headset, & etc).
 
-    It will repeat this task until user input to stop (exit) from the player.
+    It will repeat this task until user input to stop (exit) from this script.
 
 .EXAMPLE
     Either use right-mouse click to "Run with Powershell" or open PowerShell
@@ -46,7 +46,6 @@
             - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
-        - Set default duration to 1:00 and use it when missing from title field
         - Confirm music folder location and check for +1 juke folders
         - ...
 #>
@@ -191,6 +190,25 @@ function NextMelody {
 ################ Main Body (Console, Data, User Input) #################
 ########################################################################
 
+# Use do - while loop to request from user which application to use.
+do {
+    Clear-Host
+    # Request user input to confirm playback.
+    Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
+    Write-Host "$music_player `tPress '1' for this option."
+    Write-Host "$music_editor `tPress '2' for this option.`n"
+    Write-Host "NOTE:   Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
+    Write-Host "PATH:   $music_abc_path" -ForegroundColor Blue
+    Write-Host "PAUSE:  $music_abc_title_pause seconds" -ForegroundColor Blue
+    Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
+    # Set default selection to "PLAYER" program.
+    $def_player = "1"
+    # Capture user selection for re-use.
+    $player_type = Read-Host "Please enter which player to use (default is AbcPlayer)"
+    # Test user input (none vs. number) and assign default when null.
+    if (-NOT $player_type) {$player_type = $def_player}
+} while (-NOT ([Int]$player_type -match '^\d?1|2'))
+
 # Build an array list of melody files.
 try {
     # NOTE: if additional non-juke ABC files are found, they will also be
@@ -230,25 +248,6 @@ foreach ($melody in $music_collection) {
 }
 # Include an all folders selection and use it as the default choice.
 $folder_array += "ALL"
-
-# Use do - while loop to request from user which application to use.
-do {
-    Clear-Host
-    # Request user input to confirm playback.
-    Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
-    Write-Host "$music_player `tPress '1' for this option."
-    Write-Host "$music_editor `tPress '2' for this option.`n"
-    Write-Host "NOTE:   Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
-    Write-Host "PATH:   $music_abc_path" -ForegroundColor Blue
-    Write-Host "PAUSE:  $music_abc_title_pause seconds" -ForegroundColor Blue
-    Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
-    # Set default selection to "PLAYER" program.
-    $def_player = "1"
-    # Capture user selection for re-use.
-    $player_type = Read-Host "Please enter which player to use (default is AbcPlayer)"
-    # Test user input (none vs. number) and assign default when null.
-    if (-NOT $player_type) {$player_type = $def_player}
-} while (-NOT ([Int]$player_type -match '^\d?1|2'))
 
 # Use do - while loop to request from user which folder(s) to use.
 do {
