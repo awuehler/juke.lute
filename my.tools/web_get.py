@@ -32,14 +32,14 @@ Dependencies
     -Using the route-able (public) IP assigned to the localhost
 
 TODO:
-    - Add URL for each sub folder
-    - Set limit of number of files to display
+    - Set an upper limit of number of files to display in console
 '''
 
 # ----------------------------------------------------------------------
 # Module(s). Including a condition check of Python version and import.
 # ----------------------------------------------------------------------
 import os, socket, sys
+from pathlib import Path
 
 # Python version check.
 if sys.version_info.major == 2:
@@ -67,22 +67,26 @@ def host_ip_sock():
 def walk_web_file():
     try:
         public_ip = host_ip_sock()
-        print( "HTTP URL:\t" + "http://" + str( public_ip ) + ":" + web_env.LOCAL_PORT + "/\n" )
-
-        # Optimize for ABC and MIDI.
-        target_extensions = ['.abc', '.mid']
-        lotro_files = []
+        http_url = "http://" + str( public_ip ) + ":" + web_env.LOCAL_PORT
+        print( "HTTP URL:\t" + http_url + "/\n" )
 
         # Walk the CWD (location of script execution).
         for root, dirs, files in os.walk( ".", topdown=True ):
             for web_file in sorted( files ):
-                for ext in target_extensions:
+                for ext in web_env.target_extensions:
+                    # Only include certain extensions (see web_env.py).
                     if web_file.lower().endswith( ext.lower() ):
-                        if ( os.path.join(root, web_file) not in lotro_files ):
-                            lotro_files.append( os.path.join(root, web_file) )
-        # Print the sorted list of files.
-        for i in lotro_files:
-            print( i.expandtabs(13) )
+                        # Re-confirm full path to file does exists.
+                        if ( Path( os.path.join(root, web_file) ).exists() ):
+                            # Only add unique entries to the list array.
+                            if ( os.path.join(root, web_file) not in web_env.lotro_files ):
+                                web_env.lotro_files.append( os.path.join(root, web_file) )
+
+        # Print the sorted list of URLs for end user copy/paste operations.
+        for i in web_env.lotro_files:
+            i = i.replace( '\\', '/' )
+            i = i.replace( '.', http_url, 1 )
+            print( i )
 
     except:
         # For unknown problems.
@@ -118,7 +122,8 @@ def main():
         print( "SYSTEM IP:\t" + host_ip_sock() + " /" + " WEB SERVER PORT: " + str( PORT ) )
         warn_ip_address()
         walk_web_file()
-        print( "\n-------------------------------------------------------------------------" )
+        print( "\nTo Stop: Use CTRL-C key to exit from the HTTP server session\n" )
+        print( "-------------------------------------------------------------------------\n" )
         
         # Initiate the HTTP web service until cancelled by user (ctrl-c).
         httpd.serve_forever()
