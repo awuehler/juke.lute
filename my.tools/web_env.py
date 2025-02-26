@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------
-# Default network settings for localhost environments.
+# Optimize network settings for localhost environments.
 LOCAL_HOST = '0.0.0.0'
 LOCAL_PORT = '8000'
 # ----------------------------------------------------------------------

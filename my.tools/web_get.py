@@ -82,7 +82,7 @@ def walk_web_file():
                             if ( os.path.join(root, web_file) not in web_env.lotro_files ):
                                 web_env.lotro_files.append( os.path.join(root, web_file) )
 
-        # Print the sorted list of URLs for end user copy/paste operations.
+        # Print the sorted list of URLs for end user reference (browser, wget, curl, ...).
         for i in web_env.lotro_files:
             i = i.replace( '\\', '/' )
             i = i.replace( '.', http_url, 1 )
@@ -117,12 +117,12 @@ def main():
             HANDLER = http.server.SimpleHTTPRequestHandler
             httpd   = socketserver.TCPServer( ( HOST, PORT ), HANDLER )
 
-        # Stdout for the user with fully qualified URLs for each discovered file.
+        # Stdout for easy user acces to fully qualified URLs to each matching type of file.
         print( "\n-------------------------------------------------------------------------" )
-        print( "SYSTEM IP:\t" + host_ip_sock() + " /" + " WEB SERVER PORT: " + str( PORT ) )
+        print( "SYSTEM IP:\t" + host_ip_sock() + " /" + " WEB SERVER PORT: " + str( PORT )   )
         warn_ip_address()
         walk_web_file()
-        print( "\nTo Stop: Use CTRL-C key to exit from the HTTP server session\n" )
+        print( "\nTo Stop: Use CTRL-C key to exit from the HTTP server session\n"            )
         print( "-------------------------------------------------------------------------\n" )
         
         # Initiate the HTTP web service until cancelled by user (ctrl-c).
@@ -139,8 +139,7 @@ if __name__ == "__main__":
         either as a script and/or imported into another module.
         Isolate all user defined file updates to this section.
     """
-    # Runtime environment declarations.
-    # See web_env.py
+    # Optimize for local runtime environment: See web_env.py
     
     # Main function to start simple HTTP service to serve a directory.
     main()

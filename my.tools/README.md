@@ -1,32 +1,36 @@
 ## Scripts
 
-Both MS PowerShell and WSL Linux (i.e. Debian or Ubuntu) are used for modifications done across concurrent files i.e.
+Both MS Powershell and WSL Linux (i.e. Debian or Ubuntu) are used for modifications done across concurrent ABC files i.e.
 
   - Compress *.abc files into a single efficient ZIP file
   - Search and replace of keywords across multiple files
   - Append and optimize 2 or more melody files into a single ABC playlist
+  - Redistribute via HTTP for browser, wget, or curl access
+  - ...
 
-Finally, to reduce the 'Enshittification' of shared ABC files by removing unnecessary and unwanted complexity.
+Finally, to reduce the 'Enshittification' of these shared ABC files by removing unnecessary and unwanted complexity for solo play.
 
 ## Applications
 
-A small number of open-source desktop tools are used to work with both MIDI and ABC files. This is a personal mantra, and as a LOTRO on-again and off-again player my in-game needs are simple (please recall my claim as a "lute soloist"). To achieve up to date and clean ABC music files which may be re-purposed by any soloist of other instruments please consider the following toolbox:
+A small number of open-source desktop tools are used to work with both MIDI and ABC files. This is a personal mantra, and as a LOTRO on-again and off-again player my in-game needs are modest (please recall my claim as a "lute soloist"). To achieve up to date and clean ABC music files which may be re-purposed by other soloist players please consider the following toolbox:
 
   - Notepad++ / VLC / VSCodium  (Open-source applications; very active communities; loads of documentation)
   - ABC Player / Maestro (GitHub project: https://github.com/digero/maestro)
   - EasyABC (visualization and editing of ABC notation)
+  - Bash, Python, or Powershell scripting
 
-Each have their specific pros and cons in terms of the MS Windows setup requirements, user knowledge and debug skills, and overall learning curve to master for each application.
+Each have their specific pros and cons in terms of the MS Windows runtime requirements, user knowledge and debug skills, and overall learning curve to master each application or CLI area.
+
   - Thankfully, there are many alternative tools available to the reader
 
 ## Modifications (aka MODS)
 
   - 'Chiran' Songbook
     - Current version is old and is not maintained
-    - However, it is popular and in wide-spread use
+    - However, it is popular, stable, and in wide-spread use
   - 'Badger' SongbookBB
     - https://www.linawillow.org/home/plugins-2/songbook/
-      - In development with frequent updates and support
+      - In development with frequent updates and ongoing player support
 
 The exact steps are left to the reader as an exercise to find appropriate instruction and/or necessary information to install a LOTRO modification aka MOD.
 
@@ -61,12 +65,12 @@ The step before the ABC file is the MIDI file used for the conversion to text (A
   - Websites like Free MIDI, MIDI 101, Bit MIDI, Supreme MIDI, MIDI World, and others offer a variety of content beyond music melodies
     - Locating one or more favorite melodies is left as an exercise for the reader to explore further
   
-  - Please note that the same problems exist for any curated lists of MIDI websites as with ABC websites
+  - Please note that there are hundreds of MIDI websites (large, small, active, old, free, subscription, & so on) and can be found via search engine filters
 
     - **So...** Be Patient, Carry On, And Try Try Again
     - **And...** Don't forget, use the Internet "WayBack Machine"
 
-  - From the above toolbox, the **Maestro** application is used to convert MIDI to ABC format (i.e. this is the "tune" not "compose" step mentioned previously)
+  - From the above toolbox, the **Maestro** application (for example) is used to convert MIDI to ABC format (i.e. this is the "tune" not "compose" step mentioned previously)
 
 ### AUDIO
 
@@ -84,7 +88,7 @@ The step before the AUDIO file is a live stream (i.e. recorded live stream/sessi
   - Tools, steps, and details to convert a live stream file to an audio only format is not in scope for this project
     - Learning to make and edit audio files from live stream recordings is left as an exercise for the reader to explore further
 
-      - For example, the FFmpeg open-source project is great starting point
+      - For example, the FFmpeg open-source project is a great starting point
 
 ### AI
 
@@ -94,3 +98,4 @@ The step **beyond** the LIVE recording using pop culture vernacular is "Artifici
   - https://huggingface.co/sander-wood/bgpt
   - https://folkrnn.org/
   - https://themachinefolksession.org/
+  - ...

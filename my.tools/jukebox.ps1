@@ -10,14 +10,14 @@
     It will repeat this task until user input to stop (exit) from this script.
 
 .EXAMPLE
-    Either use right-mouse click to "Run with Powershell" or open PowerShell
+    Either use right-mouse click to "Run with Powershell" or open Powershell
     console window on your desktop to run this script from any directory.
 
         e.g. ".\jukebox.ps1"
 
 .NOTES
     WARNING:
-    If PowerShell script execution is blocked by your MSW security policy,
+    If Powershell script execution is blocked by your MSW security policy,
     then try the following steps to allow the execution of *.ps1 files:
 
         Start a new Powershell session as admin  i.e. "Run as administrator"
@@ -28,8 +28,8 @@
 
     ASSUMPTION:
         - Using the latest version of Powershell (i.e. version 7 or above)
-            - PowerShell ISE will also work (as per Execution Policy above)
-            - Default MSW PowerShell should work too (e.g. version 3 or 5)
+            - Powershell ISE will also work (as per Execution Policy above)
+            - Default MSW Powershell should work too (e.g. version 3 or 5)
         - Installed: ABC Player & Maestro (https://github.com/digero/maestro)
         - Installed: At least one juke.<instrument>.zip is downloaded and put
             into C:\Users\***\Documents\The Lord of the Rings Online\Music
@@ -56,7 +56,7 @@
 $music_abc_title_pause = 3
 
 # Fallback duration when the Title key:value pair is missing (mm:ss). 
-$music_abc_title_time2 = '(0:33)'
+$music_abc_title_time2 = '(0:55)'
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
@@ -180,8 +180,6 @@ function NextMelody {
     if ($music_abc_title_time -notlike "*:*") {
         $music_abc_title_time = $music_abc_title_time2
     }
-    # Remove new selection from collection.
-    #$music_collection = $music_collection | ? {$_.Server -ne $random_melody}
     # Return an array of values.
     return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
@@ -215,7 +213,7 @@ try {
     #       indexed. And if they don't meet the assumptions noted above
     #       about an accurate ...(mm:ss)... playtime duration included in
     #       the T: ... title field then roll-over to the next melody will
-    #       incorrect.
+    #       be incorrect i.e. truncated playback.
     $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File -Filter "*.abc" | Select-Object -Property FullName )
 }
 catch {
@@ -235,7 +233,7 @@ catch {
 
 # Build a list of sub folders within the juke box(es).
 # NOTE: The use of duplicate sub folder names inside the separate juke
-#       boxes are not tracked separately in following array structure. 
+#       boxes are not tracked separately when added to array structure. 
 $folder_array = @()
 # Find each (unique) folder across all *.abc files.
 foreach ($melody in $music_collection) {

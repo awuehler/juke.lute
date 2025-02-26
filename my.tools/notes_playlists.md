@@ -9,13 +9,12 @@ Please recall that ABC files are text files. They may be edited using a basic ed
 The following is a basic 3 melody example to append several ABC files into a single playlist.
 
   - For clarity, the music notation is removed for each tune to make it easier to review the overall file structure
-
     - Where, each \<snip\> reference is a simple placeholder to the original melody
 
 As per ABC notation, the % or percent symbol is used for comments and ignored during music playback.
 
     X: 1                                                            % Required; Use as is
-    T: (6:08) Brown Eyes Blue / Mad About Him / Bad Feeling Blues   % Title; short anything; In LOTRO: 60 character limit
+    T: Brown Eyes Blue / Mad About Him / Bad Feeling Blues (6:08)   % Title; short anything; In LOTRO: 60 character limit
     C: Rural Blues Melodies                                         % Composer; can be anything for a playlist
     Z: LOTRO                                                        % Optional; can be anything for a playlist
     M: 4/4                                                          % Required; all playlist songs must use matching
@@ -67,9 +66,12 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
 ## Further Suggestions
 
   - For each melody, leave the original X: through K: header lines in place and simply mark each line as a comment using the % symbol for future reference
+
   - Keep the top title "T: ..." short (< 60 characters) and prefix/suffix it with the total play time for quick reference inside LOTRO
+
   - There are two kinds of "rest" flags for ABC notation; please use the "x" rest because it is hidden (i.e. ignored) in tools like Easy ABC; Whereas the other rest flag will cause applications like Easy ABC to change the appearance of a music score
+
   - Playlist Jams can be of any length in terms of total time taken end to end; please keep in mind your listeners and scale/curate each playlist for a well defined situation
+
   - The challenge to is collect *.abc files with matching M, Q, and K header fields and this effort is left as an ongoing exercise to the reader
-    
     - **So...** Be Patient, Carry On, And Try Try Again

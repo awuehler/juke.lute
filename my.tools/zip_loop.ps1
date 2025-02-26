@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Script to package each instrument folder into a separate zip file.
+    Script to package each instrument folder into a separate jukebox file.
 
 .DESCRIPTION
     Automate the steps to add the updated *.abc files into compressed
-    packages for upload to a target i.e. GitHub.
+    packages for upload to a target i.e. GitHub, GitLab, Gitea, ...
 
 .EXAMPLE
     Run this script after each and every music modification to maintain
@@ -14,7 +14,7 @@
 
 .NOTES
     WARNING:
-    If PowerShell script execution is blocked by the local security
+    If Powershell script execution is blocked by the local security
     policy, then try the following steps to allow:
 
         Start a new Powershell session as admin  i.e. "Run as administrator"
@@ -25,8 +25,8 @@
 
     ASSUMPTION:
         - Using the latest version of Powershell (i.e. version 7 or above)
-            - PowerShell ISE will also work (as per Execution Policy above)
-            - Default MSW PowerShell should work too (e.g. version 3 or 5)
+            - Powershell ISE will also work (as per Execution Policy above)
+            - Default MSW Powershell should work too (e.g. version 3 or 5)
         - Cloned: https://github.com/awuehler/juke.lute (i.e. this repository)
         - Default LOTRO Music folder is located under the C:\ drive
         - ...
@@ -34,6 +34,7 @@
     TODO:
         - Add option to submit the actual path to the LOTRO Music folder
             to remove the assumption for user edits to fix pathing issues
+        - Enable script to be run from different locations
         - ...
 #>
 
@@ -103,7 +104,7 @@ function TargetPrevious {
 ################ Main Body (Console, Data, User Input) #################
 ########################################################################
 
-# Clear the PowerShell console window.
+# Clear the Powershell console window.
 Clear-Host
 
 # Display summary of the ZIP files. (before)

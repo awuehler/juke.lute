@@ -1,6 +1,6 @@
 ## Organization Of Music Buckets
 
-The following is a preview of the list of folders for this exercise. Some of the folders will contain a large number of *.abc files and other folders not so many. The exact number of folders, their labels, and types of grouping will change over time.
+The following is a preview of the list of folders for this exercise. Many folders contain a large number of *.abc files and other folders less so. Where, the exact number of folders, their labels, and types of grouping will change over time.
 
     PS C:\Users\**********\Documents\The Lord of the Rings Online\Music\juke.lute> ls
     
@@ -26,5 +26,9 @@ The following is a preview of the list of folders for this exercise. Some of the
 ## General Expectations
 
   - Each new ZIP file uploaded to this project will contain new tunes at a minimum
+
   - These *.abc files will be renamed, copied, or moved at will
+
   - Individual *.abc files may be edited and changed without notice to improve tune playback
+
+  - Always remove OR rename the previous juke folders before unzipping a new version of each juke.<instrument> ZIP file
