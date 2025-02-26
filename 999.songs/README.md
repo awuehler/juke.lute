@@ -43,7 +43,7 @@ Seriously, as a practising soloist player I do not intend to burn extra time and
   - Thus required is the use of an in-game extension aka MOD (of which, there are two MODs available to LOTRO)
     - Please note that the old/original Songbook MOD is assumed
 
-  - Where human readable <Tradition> / <Composer> / <Artist> / <Venue> / <Title> labels are first and foremost
+  - Where the use of human readable ( Tradition | Composer | Artist | Venue | Title ) labels are first and foremost
     - _Again, apologies in advance for going **too far** in the other direction by using very long filenames_
 
 ## Folders and Names and Adjustments

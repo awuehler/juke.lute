@@ -1,5 +1,6 @@
 # Table Of Contents
 
+- [Table Of Contents](#table-of-contents)
   - [Jukebox Player](#jukebox-player)
     - [Player Example](#player-example)
   - [Localhost Webserver](#localhost-webserver)
@@ -35,7 +36,10 @@ The purpose of the "Jukebox Player" is to make it easy to listen to multiple ABC
     Please enter which player to use (default is AbcPlayer): 2
     
     Available folders:
-    [0]BASSOON-LUTE  [1]BASSOON-TTF  [2]FLUTE-LUTE  [3]FLUTE-TTF  [4]LUTE-TTF  [5]LUTE-VIOLIN  [6]TTF-VIOLIN  [7]JUKE.FIDDLE  [8]JUKE.FLUTE  [9]AI  [10]CLUB  [11]DISC  [12]FAVS  [13]FOLK  [14]FORMAL  [15]JAMS  [16]LONG1  [17]LONG2  [18]LONG3  [19]LONG4  [20]LONG5  [21]LONG6  [22]OLDER  [23]QUICK  [24]QUIET  [25]RURAL  [26]SHOW  [27]SPIRIT  [28]JUKE.VIOLIN  [29]ALL
+    [0]BASSOON-LUTE  [1]BASSOON-TTF  [2]FLUTE-LUTE  [3]FLUTE-TTF  [4]LUTE-TTF  [5]LUTE-VIOLIN
+    [6]TTF-VIOLIN  [7]JUKE.FIDDLE  [8]JUKE.FLUTE  [9]AI  [10]CLUB  [11]DISC  [12]FAVS  [13]FOLK
+    [14]FORMAL  [15]JAMS  [16]LONG1  [17]LONG2  [18]LONG3  [19]LONG4  [20]LONG5  [21]LONG6
+    [22]OLDER  [23]QUICK  [24]QUIET  [25]RURAL  [26]SHOW  [27]SPIRIT  [28]JUKE.VIOLIN  [29]ALL
     Please enter the number for which folder to use (default is [29]ALL):
     
     Playtime  : 1:33 (96 seconds)
@@ -67,7 +71,7 @@ The purpose of the "Jukebox Player" is to make it easy to listen to multiple ABC
     To Stop   : Use CTRL-C key to exit the jukebox.
     
     Playtime  : 3:16 (199 seconds)
-    Selection : John_Lennon-So_This_Is_Christmas(lute).abc (spirt)
+    Selection : John_Lennon-So_This_Is_Christmas(lute).abc (spirit)
     To Stop   : Use CTRL-C key to exit the jukebox.
     ...
 
