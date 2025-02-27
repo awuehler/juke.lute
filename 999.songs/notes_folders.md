@@ -31,4 +31,4 @@ The following is a preview of the list of folders for this exercise. Many folder
 
   - Individual *.abc files may be edited and changed without notice to improve tune playback
 
-  - Always remove OR rename the previous juke folders before unzipping a new version of each juke.<instrument> ZIP file
+  - Always remove OR rename the previous juke folders before unzipping a new version of each juke."instrument" ZIP file
