@@ -35,6 +35,9 @@
         - Add option to submit the actual path to the LOTRO Music folder
             to remove the assumption for user edits to fix pathing issues
         - Enable script to be run from different locations
+        - Conduct security review:
+          - Get-ItemProperty | Format-List
+          - Get-Item | Get-Member
         - ...
 #>
 
