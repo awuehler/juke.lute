@@ -16,7 +16,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
     X: 1                                                            % Required; Use as is
     T: Brown Eyes Blue / Mad About Him / Bad Feeling Blues (6:08)   % Title; short anything; In LOTRO: 60 character limit
     C: Rural Blues Melodies                                         % Composer; can be anything for a playlist
-    Z: LOTRO                                                        % Optional; can be anything for a playlist
+    Z: LOTRO (ABC v2.11)                                            % Optional; can be anything for a playlist
     M: 4/4                                                          % Required; all playlist songs must use matching
     Q: 122                                                          % Required; all playlist songs must use matching
     K: C maj                                                        % Required; all playlist songs must use matching
@@ -26,7 +26,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
     %X: 1                                                           % Only 1 X field is needed; left in as a placeholder
     %T: Don't It Make My Brown Eyes Blue (1:57)                     % Only 1 T field is needed; left in as a placeholder
     %C: Crystal Gayle & Richard Leigh                               % Only 1 C field is needed; left in as a placeholder
-    %Z: LOTRO                                                       % Only 1 Z field is needed; left in as a placeholder
+    %Z: LOTRO (ABC v2.11)                                           % Only 1 Z field is needed; left in as a placeholder
     %M: 4/4                                                         % Only 1 M field is needed; left in as a placeholder
     %Q: 122                                                         % Only 1 Q field is needed; left in as a placeholder
     %K: C maj                                                       % Only 1 K field is needed; left in as a placeholder
@@ -39,7 +39,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
     %X: 1                                                           % Only 1 X field is needed; left in as a placeholder
     %T: Mad About Him, Sad About Him Blues (2:21)                   % Only 1 T field is needed; left in as a placeholder
     %C: Dinah Shore                                                 % Only 1 C field is needed; left in as a placeholder
-    %Z: LOTRO                                                       % Only 1 Z field is needed; left in as a placeholder
+    %Z: LOTRO (ABC v2.11)                                           % Only 1 Z field is needed; left in as a placeholder
     %M: 4/4                                                         % Only 1 M field is needed; left in as a placeholder
     %Q: 122                                                         % Only 1 Q field is needed; left in as a placeholder
     %K: C maj                                                       % Only 1 K field is needed; left in as a placeholder
@@ -52,7 +52,7 @@ As per ABC notation, the % or percent symbol is used for comments and ignored du
     %X: 1                                                           % Only 1 X field is needed; left in as a placeholder
     %T: Bad Feeling Blues (1:50)                                    % Only 1 T field is needed; left in as a placeholder
     %C: Arthur Blake                                                % Only 1 C field is needed; left in as a placeholder
-    %Z: LOTRO                                                       % Only 1 Z field is needed; left in as a placeholder
+    %Z: LOTRO (ABC v2.11)                                           % Only 1 Z field is needed; left in as a placeholder
     %M: 4/4                                                         % Only 1 M field is needed; left in as a placeholder
     %Q: 122                                                         % Only 1 Q field is needed; left in as a placeholder
     %K: C maj                                                       % Only 1 K field is needed; left in as a placeholder
