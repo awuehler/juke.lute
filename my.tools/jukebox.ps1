@@ -81,13 +81,10 @@ function ProbabilityPick {
     try {
         $abc_pick = ($abc_list | Get-Random | Select-Object -ExpandProperty FullName)
         # Check playlist history to avoid any recent duplicate melodies.
-        #if ($global:MelodyTrack -contains $random_melody) {
         if ($global:MelodyTrack -contains $abc_pick) {
             # Repeat random selection until a new/unique tune is chosen.
             do {
-                #$random_melody = ($abc_list | Get-Random | Select-Object -ExpandProperty FullName)
                 $abc_pick = ($abc_list | Get-Random | Select-Object -ExpandProperty FullName)
-            #} until (-NOT ($global:MelodyTrack -contains $random_melody))
             } until (-NOT ($global:MelodyTrack -contains $abc_pick))
         }
     }
