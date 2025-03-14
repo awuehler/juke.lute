@@ -29,9 +29,10 @@ The purpose of the "Jukebox Player" is to make it easy to listen to multiple ABC
     "C:\Program Files (x86)\Maestro\AbcPlayer.exe"  Press '1' for this option.
     "C:\Program Files (x86)\Maestro\Maestro.exe"    Press '2' for this option.
     
-    NOTE:   Edit this script to change default paths or pause between melodies
-    PATH:   C:\Users\*****\Documents\The Lord of the Rings Online\Music
-    PAUSE:  3 seconds
+    NOTE:     Edit this script to change default paths or pause between melodies
+    PATH:     C:\Users\*****\Documents\The Lord of the Rings Online\Music
+    PAUSE:    3 seconds between each melody
+    HISTORY:  3 melodies (i.e. no repeats)
     ------------------------ jukebox.ps1 / ***** ------------------------
     Please enter which player to use (default is AbcPlayer): 2
     

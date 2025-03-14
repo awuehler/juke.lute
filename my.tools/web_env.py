@@ -6,6 +6,6 @@ LOCAL_PORT = '8000'
 
 # ----------------------------------------------------------------------
 # Optimize for ABC and MIDI file extensions.
-target_extensions = ['.abc', '.mid']
-lotro_files = []
+TARGET_EXTENSIONS = ['.abc', '.mid']
+SERVE_FILES = []
 # ----------------------------------------------------------------------

@@ -73,17 +73,17 @@ def walk_web_file():
         # Walk the CWD (location of script execution).
         for root, dirs, files in os.walk( ".", topdown=True ):
             for web_file in sorted( files ):
-                for ext in web_env.target_extensions:
+                for ext in web_env.TARGET_EXTENSIONS:
                     # Only include certain extensions (see web_env.py).
                     if web_file.lower().endswith( ext.lower() ):
                         # Re-confirm full path to file does exists.
                         if ( Path( os.path.join(root, web_file) ).exists() ):
                             # Only add unique entries to the list array.
-                            if ( os.path.join(root, web_file) not in web_env.lotro_files ):
-                                web_env.lotro_files.append( os.path.join(root, web_file) )
+                            if ( os.path.join(root, web_file) not in web_env.SERVE_FILES ):
+                                web_env.SERVE_FILES.append( os.path.join(root, web_file) )
 
         # Print the sorted list of URLs for end user reference (browser, wget, curl, ...).
-        for i in web_env.lotro_files:
+        for i in web_env.SERVE_FILES:
             i = i.replace( '\\', '/' )
             i = i.replace( '.', http_url, 1 )
             print( i )

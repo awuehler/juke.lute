@@ -42,8 +42,6 @@
             - set default path to juke.lute vs. juke.flute vs. juke.xyz
             - set default path to Maestro / AbcPlayer
             - set default pause between each *.abc melody file
-        - Track previous melodies to skip
-            - to avoid repeats within a given folder of tunes
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
         - Confirm music folder location and check for +1 juke folders
@@ -52,7 +50,10 @@
 
 ########################################################################
 ################## End-User Modifications (if needed) ##################
-# Add a delay between each melody selection, plus the recursive latency.
+# History of previously played ABC files to avoid repeat selections.
+$music_history = 3
+
+# Add a delay between each melody selection (in seconds).
 $music_abc_title_pause = 3
 
 # Fallback duration when the Title key:value pair is missing (mm:ss). 
@@ -60,7 +61,6 @@ $music_abc_title_time2 = '(0:55)'
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
-#$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.duet"
 $music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"
 
 # Define safe paths to applications (assumes default install location).
@@ -79,12 +79,13 @@ function ProbabilityPick {
         $abc_list
     )
     try {
-        $abc_pick = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-        if ($random_melody -eq $global:PreviousMelody) {
-            # Repeat random selection until different tune is chosen.
+        $abc_pick = ($abc_list | Get-Random | Select-Object -ExpandProperty FullName)
+        # Check playlist history to avoid any recent duplicate melodies.
+        if ($global:MelodyTrack -contains $random_melody) {
+            # Repeat random selection until a new/unique tune is chosen.
             do {
-                $random_melody = ( $abc_list | Get-Random | Select-Object -ExpandProperty FullName )
-            } until (-NOT ($random_melody -eq $global:PreviousMelody))
+                $random_melody = ($abc_list | Get-Random | Select-Object -ExpandProperty FullName)
+            } until (-NOT ($global:MelodyTrack -contains $random_melody))
         }
     }
     catch {
@@ -162,24 +163,25 @@ function NextMelody {
         # to folder names only.
         } until ($random_melody -match "\\" + $folder_array[[Int]$folder_pick] + "\\")
     }
-    # Track the new melody selection.
-    $global:PreviousMelody = $random_melody
     # Set sheltering for parameter placement.
-    $music_maestro = """" + ( $random_melody ) + """"
-    $music_content = "'"  + ( $random_melody ) + "'"
+    $music_maestro = """" + ($random_melody) + """"
+    $music_content = "'"  + ($random_melody) + "'"
     # Extract title (limit to first occurence).
-    $music_abc_title         = ( Select-String -Path $random_melody -Pattern '^T: ' | Select-Object -First 1 )
+    $music_abc_title         = (Select-String -Path $random_melody -Pattern '^T: ' | Select-Object -First 1)
     $music_abc_title_string  = $music_abc_title.ToString()
     $music_abc_title_length  = $music_abc_title_string.Length
     $music_abc_title_length -= 9
     # Extract time (don't assume duration is located at end of Title line).
-    $music_abc_title_short = $music_abc_title_string.Remove( 0, $music_abc_title_length )
-    #$music_abc_title_time  = ( $music_abc_title_short  -replace '.*\(' -replace '\).*' )
-    $music_abc_title_time  = ( $music_abc_title_string  -replace '.*\(' -replace '\).*' )
+    $music_abc_title_short = $music_abc_title_string.Remove(0, $music_abc_title_length)
+    $music_abc_title_time  = ($music_abc_title_string  -replace '.*\(' -replace '\).*')
     # Confirm if a proper duration was extracted from the title.
     if ($music_abc_title_time -notlike "*:*") {
         $music_abc_title_time = $music_abc_title_time2
     }
+    # Shift tracking array of previously played melodies.
+    $null, $NewMelodyTrack = $global:MelodyTrack
+    $NewMelodyTrack += $random_melody
+    $global:MelodyTrack = $NewMelodyTrack
     # Return an array of values.
     return @($random_melody, $music_maestro, $music_content, $music_abc_title, $music_abc_title_short, $music_abc_title_time)
 }
@@ -195,9 +197,10 @@ do {
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     Write-Host "$music_player `tPress '1' for this option."
     Write-Host "$music_editor `tPress '2' for this option.`n"
-    Write-Host "NOTE:   Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
-    Write-Host "PATH:   $music_abc_path" -ForegroundColor Blue
-    Write-Host "PAUSE:  $music_abc_title_pause seconds" -ForegroundColor Blue
+    Write-Host "NOTE:     Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
+    Write-Host "PATH:     $music_abc_path" -ForegroundColor Blue
+    Write-Host "PAUSE:    $music_abc_title_pause seconds between each melody" -ForegroundColor Blue
+    Write-Host "HISTORY:  $music_history melodies (i.e. no repeats)" -ForegroundColor Blue
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     # Set default selection to "PLAYER" program.
     $def_player = "1"
@@ -213,8 +216,8 @@ try {
     #       indexed. And if they don't meet the assumptions noted above
     #       about an accurate ...(mm:ss)... playtime duration included in
     #       the T: ... title field then roll-over to the next melody will
-    #       be incorrect i.e. truncated playback.
-    $music_collection = ( Get-ChildItem -Path $music_abc_path -Recurse -File -Filter "*.abc" | Select-Object -Property FullName )
+    #       be incorrect i.e. truncated playback of ABC file to next one.
+    $music_collection = (Get-ChildItem -Path $music_abc_path -Recurse -File -Filter "*.abc" | Select-Object -Property FullName)
 }
 catch {
     Write-Host "An error occurred to juke.lute: "
@@ -223,12 +226,22 @@ catch {
 
 # Seed an initial random pick for test and verify.
 try {
-    $global:PreviousMelody = ( $music_collection | Get-Random | Select-Object -ExpandProperty FullName )
+    $global:PreviousMelody = ($music_collection | Get-Random | Select-Object -ExpandProperty FullName)
 }
 catch {
     Write-Host "An error occurred to select a melody file..."
     Write-Host $_
     Write-Host "PreviousMelody Value: $global:PreviousMelody"
+}
+
+# Seed an array to begin tracking history of previously played melodies.
+try {
+    $global:MelodyTrack = @($(ProbabilityPick $music_collection)) * $music_history
+}
+catch {
+    Write-Host "An error occurred to create an array of melodies..."
+    Write-Host $_
+    Write-Host "MelodyTrack Value: $global:MelodyTrack"
 }
 
 # Build a list of sub folders within the juke box(es).
