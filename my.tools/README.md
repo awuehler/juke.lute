@@ -101,4 +101,4 @@ The step **beyond** the LIVE recording using pop culture vernacular is "Artifici
  
  There are many LLM models available which may be explored with the appropriate prompts to generate ABC music scores.
  
-   -A future goal for this project is to use the jukebox ABC files as input to train a purpose built LLM (i.e. source Hugging Face) 
+   - A future goal for this project is to use the jukebox ABC files as input to train a purpose built LLM (i.e. source Hugging Face) 
