@@ -45,19 +45,21 @@
         - Add pick by metadata options (i.e. keys, beats, keywords, so on)
         - Add check and application restart after N iterations
         - Confirm music folder location and check for +1 juke folders
+        - Add array sort to folder list
+        - Add user prompt to include 2nd folder
         - ...
 #>
 
 ########################################################################
 ################## End-User Modifications (if needed) ##################
 # History of previously played ABC files to avoid repeat selections.
-$music_history = 3
+$music_abc_history = 3
 
 # Add a delay between each melody selection (in seconds).
-$music_abc_title_pause = 3
+$music_abc_pause = 3
 
 # Fallback duration when the Title key:value pair is missing (mm:ss). 
-$music_abc_title_time2 = '(0:55)'
+$music_abc_fallback = '(0:55)'
 
 # Capture the current username (assumes default user location).
 #$music_abc_path = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music\juke.lute"
@@ -141,7 +143,7 @@ function FormatTimeToSecond {
     # Convert to seconds (integer).
     [Int]$minutes *= 60
     # Add minutes and seconds for total seconds (integer).
-    $totalSeconds = [Int]$minutes + [Int]$seconds + [Int]$music_abc_title_pause
+    $totalSeconds = [Int]$minutes + [Int]$seconds + [Int]$music_abc_pause
     # Return total duration with included pause between melodies.
     return $totalSeconds
 }
@@ -176,7 +178,7 @@ function NextMelody {
     $music_abc_title_time  = ($music_abc_title_string  -replace '.*\(' -replace '\).*')
     # Confirm if a proper duration was extracted from the title.
     if ($music_abc_title_time -notlike "*:*") {
-        $music_abc_title_time = $music_abc_title_time2
+        $music_abc_title_time = $music_abc_fallback
     }
     # Shift tracking array of previously played melodies.
     $null, $NewMelodyTrack = $global:MelodyTrack
@@ -199,8 +201,8 @@ do {
     Write-Host "$music_editor `tPress '2' for this option.`n"
     Write-Host "NOTE:     Edit this script to change default paths or pause between melodies" -ForegroundColor Blue
     Write-Host "PATH:     $music_abc_path" -ForegroundColor Blue
-    Write-Host "PAUSE:    $music_abc_title_pause seconds between each melody" -ForegroundColor Blue
-    Write-Host "HISTORY:  $music_history melodies (i.e. no repeats)" -ForegroundColor Blue
+    Write-Host "PAUSE:    $music_abc_pause seconds between each melody" -ForegroundColor Blue
+    Write-Host "HISTORY:  $music_abc_history melodies (i.e. no repeats)" -ForegroundColor Blue
     Write-Host $("-" * 24) $MyInvocation.MyCommand.Name / $Env:UserName $("-" * 24)
     # Set default selection to "PLAYER" program.
     $def_player = "1"
@@ -236,7 +238,7 @@ catch {
 
 # Seed an array to begin tracking history of previously played melodies.
 try {
-    $global:MelodyTrack = @($(ProbabilityPick $music_collection)) * $music_history
+    $global:MelodyTrack = @($(ProbabilityPick $music_collection)) * $music_abc_history
 }
 catch {
     Write-Host "An error occurred to create an array of melodies..."
@@ -285,8 +287,8 @@ do {
     Write-Host "Selection : $(Split-Path -Path "$($new_melody[0])" -Leaf) ($(Split-Path -Path $(Split-Path -Path "$($new_melody[0])" -Parent) -Leaf))"
     # Run player and send standard output to null.
     PlayMelody $player_type
+    # TODO: Change to support continue to next melody.
     #Write-Host "To Skip   : Use TBD key to jump to next melody. "
     Write-Host "To Stop   : Use CTRL-C key to exit the jukebox."
-    # TODO: Change to support continue to next melody.
     Start-Sleep -Seconds $(FormatTimeToSecond $($new_melody[5]))
 } until ([System.Console]::KeyAvailable)

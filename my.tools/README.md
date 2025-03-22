@@ -50,10 +50,9 @@ Here are a few examples to public ABC libraries that are actively maintained. Th
       - Where many LOTRO music collections contain ABC files from this primary online source
 
   - Plus many smaller or special interest websites can be researched
-      - Found embedded within link lists noted at the above websites
-      - By scraping search engine results using a small list of keywords
-    - Please be aware that many ABC websites are no longer available and the curated lists located on these larger ABC websites are seriously out of date
-  
+    - Found embedded within link lists noted at the above websites
+    - By scraping search engine results using a small list of keywords
+    - Please be aware that many ABC websites are no longer available and the curated lists located on these larger ABC websites are seriously out of date    
       - **So...** Be Patient, Carry On, And Try Try Again
       - **And...** Don't forget, use the Internet "WayBack Machine"
 
@@ -62,11 +61,11 @@ Here are a few examples to public ABC libraries that are actively maintained. Th
 The step before the ABC file is the MIDI file used for the conversion to text (ASCII) based on ABC music notation.
 
   - The effort to find MIDI files for conversion to ABC format is much easier (i.e. MIDI is widely known and understood) than a direct search for only ABC formatted files
+
   - Websites like Free MIDI, MIDI 101, Bit MIDI, Supreme MIDI, MIDI World, and others offer a variety of content beyond music melodies
     - Locating one or more favorite melodies is left as an exercise for the reader to explore further
   
   - Please note that there are hundreds of MIDI websites (large, small, active, old, free, subscription, & so on) and can be found via search engine filters
-
     - **So...** Be Patient, Carry On, And Try Try Again
     - **And...** Don't forget, use the Internet "WayBack Machine"
 
@@ -78,7 +77,6 @@ The step before the MIDI file is the audio file for recorded tunes. Available in
 
   - Tools, steps, and details to convert an audio file to MIDI is not in scope for this project
     - Learning to make and edit MIDI files from audio files is left as an exercise for the reader to explore further
-
       - For example, the "WaoN - a wave-to-notes transcriber" project is great starting point
 
 ### LIVE
@@ -87,7 +85,6 @@ The step before the AUDIO file is a live stream (i.e. recorded live stream/sessi
 
   - Tools, steps, and details to convert a live stream file to an audio only format is not in scope for this project
     - Learning to make and edit audio files from live stream recordings is left as an exercise for the reader to explore further
-
       - For example, the FFmpeg open-source project is a great starting point
 
 ### AI
@@ -101,4 +98,5 @@ The step **beyond** the LIVE recording using pop culture vernacular is "Artifici
   - ...
  
  There are many LLM models available which may be explored with the appropriate prompts to generate ABC music scores.
-  
+ 
+   -A future goal for this project is to use the jukebox ABC files as input to train a purpose built LLM (i.e. source Hugging Face) 

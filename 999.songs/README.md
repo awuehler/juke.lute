@@ -36,7 +36,7 @@ These jukebox ABC files are assigned long file names, with mixed case, punctuati
     /play filename <ENTER_KEY>
     ...
 
-Seriously, as a practising soloist player I do not intend to burn extra time and effort outside the game in search of specific melodies by way of vague or non-intuitive filename references (optimized for band aka sync playback). After repeatedly looking through hundreds and hundreds of short, terse, or obscure *.abc filenames over and over... A decision was reached to reset each and every solo *.abc filename back to its human understandable format for easier usage inside LOTRO via a MOD.
+Seriously folks, as a practising soloist player I do not intend to burn extra time and effort outside the game in search of specific melodies by way of vague or non-intuitive filename references (optimized for band aka sync playback). So after repeatedly looking through hundreds and hundreds of short, terse, or obscure *.abc filenames over and over... A decision was reached to reset each and every solo *.abc filename back to its human understandable format for easier usage inside LOTRO via a MOD.
 
   - There are no abbreviations used for the sake of preserving the in-game shortcut to allow blind type through to a short *.abc filename
 

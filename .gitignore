@@ -3,3 +3,8 @@ __pycache__
 *.pyc
 *.log
 *.tmp
+*.env
+*.exe
+vendor/
+tmp/
+main
