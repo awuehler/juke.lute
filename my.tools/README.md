@@ -52,7 +52,8 @@ Here are a few examples to public ABC libraries that are actively maintained. Th
   - Plus many smaller or special interest websites can be researched
     - Found embedded within link lists noted at the above websites
     - By scraping search engine results using a small list of keywords
-    - Please be aware that many ABC websites are no longer available and the curated lists located on these larger ABC websites are seriously out of date    
+    - Please be aware that many ABC websites are no longer available and the curated lists located on these larger ABC websites are seriously out of date
+
       - **So...** Be Patient, Carry On, And Try Try Again
       - **And...** Don't forget, use the Internet "WayBack Machine"
 
@@ -66,6 +67,7 @@ The step before the ABC file is the MIDI file used for the conversion to text (A
     - Locating one or more favorite melodies is left as an exercise for the reader to explore further
   
   - Please note that there are hundreds of MIDI websites (large, small, active, old, free, subscription, & so on) and can be found via search engine filters
+
     - **So...** Be Patient, Carry On, And Try Try Again
     - **And...** Don't forget, use the Internet "WayBack Machine"
 
