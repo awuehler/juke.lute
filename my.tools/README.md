@@ -32,7 +32,9 @@ Each have their specific pros and cons in terms of the MS Windows runtime requir
     - https://www.linawillow.org/home/plugins-2/songbook/
       - In development with frequent updates and ongoing player support
 
-The exact steps are left to the reader as an exercise to find appropriate instruction and/or necessary information to install a LOTRO modification aka MOD.
+The exact steps are left to the reader as an exercise to find appropriate instruction and/or necessary information to install a LOTRO modification aka MOD. For reference, the following shows the suggested settings to maximize the list of *.abc files for solo play. (Yes, the older Chiran MOD is slightly better because of its larger panel view of melodies.)
+
+![Chiran MOD](Chiran_MOD-02.png "Chiran Settings")
 
 ## Resources
 
