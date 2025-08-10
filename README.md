@@ -1,4 +1,4 @@
-# juke.lute
+# juke.lute [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/awuehler/juke.lute)
 
 Is an exercise on the playing of tunes within LOTRO specific for the lute instruments. Intended for private use only.
 
