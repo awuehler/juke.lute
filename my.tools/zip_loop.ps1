@@ -46,7 +46,7 @@
     Global static parameters used for Cmdlets, Functions, & etc.
 #>
 # Initial compression parameters.
-[string]$MyCompression          = "NoCompression" # Fastest / NoCompression / Optimal
+[string]$MyCompression          = "Fastest" # Fastest / NoCompression / Optimal
 [string]$MyWorkingDirectory     = $(Get-Location)
 [string]$MyParentDirectory      = Split-Path -Path $MyWorkingDirectory -Parent
 [string]$MyAbcDirectory         = "C:\Users\$Env:UserName\Documents\The Lord of the Rings Online\Music"

@@ -5,6 +5,7 @@ Please recall that ABC files are text files. They may be edited using a basic ed
   - It is recommended to avoid using a word processor or any other editor that automatically formats text files
 
   - Append or join or merge multiple *.abc files into a single file based on whichever method is familiar to the reader
+    - Max file size supported (i.e. playable) within LOTRO is 150 KB (approximate)
 
 The following is a basic 3 melody example to append several ABC files into a single playlist.
 
