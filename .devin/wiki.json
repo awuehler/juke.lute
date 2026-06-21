@@ -1,0 +1,231 @@
+{
+  "repo_notes": [
+    {
+      "content": ""
+    }
+  ],
+  "pages": [
+    {
+      "title": "Overview",
+      "purpose": "Introduce the juke.lute repository, explaining its purpose as a collection of ABC music files for LOTRO solo lute play, and providing a high-level overview of the archive collections and tooling ecosystem",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Music Archive Collections",
+      "purpose": "Document the instrument-specific ZIP archives that contain ABC music files, emphasizing the critical juke.lute.zip archive and explaining the archive format and deployment lifecycle",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Lute Collection (Primary Archive)",
+      "purpose": "Detailed documentation of juke.lute.zip, the most critical archive (importance: 91.17), including its internal architecture, deployment pipeline, data flow, and integration patterns",
+      "parent": "Music Archive Collections",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Additional Instrument Archives",
+      "purpose": "Document the secondary instrument archives (fiddle, duet, flute, violin, bassoon), their structure, and how they complement the primary lute collection",
+      "parent": "Music Archive Collections",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Content Organization Philosophy",
+      "purpose": "Explain the 'play by ear' organization system, folder structure (folk, formal, long6, etc.), file naming conventions, and the anti-hierarchical design philosophy",
+      "parent": "Music Archive Collections",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Jukebox Playback System",
+      "purpose": "Document the jukebox.ps1 random player system for continuous ABC file playback, including architecture, player selection, and usage patterns",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Jukebox Player Configuration",
+      "purpose": "Detailed explanation of jukebox.ps1 configuration parameters, folder selection, history tracking, and the main execution loop",
+      "parent": "Jukebox Playback System",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "External Player Integration",
+      "purpose": "Document integration with AbcPlayer.exe and Maestro.exe, including player selection, file launching, and playback control mechanisms",
+      "parent": "Jukebox Playback System",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "ABC File Management Workflow",
+      "purpose": "Comprehensive guide to creating, converting, editing, and managing ABC music files, from source acquisition through MIDI conversion to final ABC format",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Archive Creation with zip_loop.ps1",
+      "purpose": "Document the automated ZIP archive creation process, including folder scanning, compression, purging old archives, and the deployment workflow",
+      "parent": "ABC File Management Workflow",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "ABC File Acquisition and Conversion",
+      "purpose": "Explain the complete pipeline from live recordings and audio files through MIDI conversion using Maestro, WaoN, and FFmpeg to final ABC format",
+      "parent": "ABC File Management Workflow",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Playlist Creation and Merging",
+      "purpose": "Document the process of creating ABC playlists by merging multiple melody files, including M:Q:K: field matching requirements and invisible rest notation",
+      "parent": "ABC File Management Workflow",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Editing Tools and Resources",
+      "purpose": "Reference guide for desktop applications (Notepad++, VSCodium, EasyABC), scripting environments (PowerShell, Python, Bash), and external ABC/MIDI libraries",
+      "parent": "ABC File Management Workflow",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Local Distribution and Web Sharing",
+      "purpose": "Document the HTTP server system for sharing ABC files over local networks using web_get.py and web_env.py configuration",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "HTTP File Server (web_get.py)",
+      "purpose": "Detailed documentation of the Python HTTP server script, including IP discovery, file scanning, URL generation, and Python 2/3 compatibility",
+      "parent": "Local Distribution and Web Sharing",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Server Configuration (web_env.py)",
+      "purpose": "Document the web server configuration file, including LOCAL_HOST, LOCAL_PORT, TARGET_EXTENSIONS, and SERVE_FILES settings",
+      "parent": "Local Distribution and Web Sharing",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "LOTRO Game Integration",
+      "purpose": "Explain how ABC archives integrate with Lord of the Rings Online, including the mandatory Songbook MOD requirement and deployment to the LOTRO Music folder",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Deployment to LOTRO Music Folder",
+      "purpose": "Step-by-step guide for extracting archives, organizing files in the LOTRO Music directory, running songbook.hta, and the manual update workflow",
+      "parent": "LOTRO Game Integration",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Songbook MOD Requirements",
+      "purpose": "Explain why the Songbook MOD (Chiran or Badger) is mandatory due to long filenames, document MOD selection criteria, and explain the index rebuild process",
+      "parent": "LOTRO Game Integration",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Script Reference",
+      "purpose": "Consolidated reference documentation for all PowerShell and Python scripts in the my.tools/ directory",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Script Usage Guide",
+      "purpose": "Quick reference for executing jukebox.ps1, zip_loop.ps1, and web_get.py, including command-line arguments, prerequisites, and common workflows",
+      "parent": "Script Reference",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Development Environment Setup",
+      "purpose": "Guide to setting up the development environment, including PowerShell execution policies, Python version requirements, required applications, and workspace configuration",
+      "parent": "Script Reference",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Future Development and AI Integration",
+      "purpose": "Document the aspirational goals for AI-driven ABC music generation, including planned LLM training using the jukebox corpus and references to existing AI music projects",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    }
+  ]
+}
