@@ -168,6 +168,7 @@ Script to build the Chiran Songbook MOD melody index (`SongbookData.plugindata`)
 - Writes plugin data under `Documents\The Lord of the Rings Online\PluginData\<username>\AllServers\`
 - Run after extracting or updating jukebox ZIP files (same step as `songbook.hta`)
 - Use `-JukeOnly` to index only `juke.*` folders; use `-WhatIf` to preview counts without writing
+- Use `-AllUsers` to update `SongbookData.plugindata` for every LOTRO account on this computer
 
 ### Songbook Example
 
@@ -188,3 +189,5 @@ Script to build the Chiran Songbook MOD melody index (`SongbookData.plugindata`)
     C:\Users\*****\Documents\The Lord of the Rings Online\PluginData\*****\AllServers\SongbookData.plugindata
 
     PS C:\Users\*****\GitHub\juke.lute\my.tools> .\songbook.ps1 -UserName "MyChar" -JukeOnly
+
+    PS C:\Users\*****\GitHub\juke.lute\my.tools> .\songbook.ps1 -AllUsers -JukeOnly

@@ -20,6 +20,11 @@
 .PARAMETER JukeOnly
     Index only files under juke.* folders (e.g. juke.lute, juke.fiddle).
 
+.PARAMETER AllUsers
+    Write SongbookData.plugindata for every LOTRO player account found on this
+    computer (UserPreferences.ini entries and PluginData folder names). Cannot
+    be combined with -UserName.
+
 .PARAMETER WhatIf
     Scan and report counts without writing SongbookData.plugindata.
 
@@ -28,6 +33,9 @@
 
 .EXAMPLE
     .\songbook.ps1 -UserName "MyChar" -JukeOnly
+
+.EXAMPLE
+    .\songbook.ps1 -AllUsers -JukeOnly
 
 .NOTES
     Compatible with Chiran Songbook MOD (songbook.hta output format).
@@ -39,7 +47,8 @@ param (
     [string]$UserName,
     [string]$MusicPath,
     [string]$LotroHome,
-    [switch]$JukeOnly
+    [switch]$JukeOnly,
+    [switch]$AllUsers
 )
 
 ########################################################################
@@ -78,6 +87,29 @@ function Get-LotroUserNames {
         }
     }
     return $names.ToArray()
+}
+
+function Get-LotroPlayerAccounts {
+    param ([string]$HomeDir)
+
+    $accounts = [System.Collections.Generic.List[string]]::new()
+
+    foreach ($name in Get-LotroUserNames -HomeDir $HomeDir) {
+        if ($accounts -notcontains $name) {
+            $accounts.Add($name)
+        }
+    }
+
+    $pluginDataRoot = Join-Path $HomeDir 'PluginData'
+    if (Test-Path -LiteralPath $pluginDataRoot) {
+        foreach ($dir in Get-ChildItem -LiteralPath $pluginDataRoot -Directory) {
+            if ($accounts -notcontains $dir.Name) {
+                $accounts.Add($dir.Name)
+            }
+        }
+    }
+
+    return ,$accounts.ToArray()
 }
 
 function Select-LotroUserName {
@@ -377,12 +409,39 @@ function Write-SongbookPluginData {
     [System.IO.File]::WriteAllText($OutputPath, $sb.ToString(), $utf8NoBom)
 }
 
+function Publish-SongbookLibrary {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param (
+        [object]$Library,
+        [string]$HomeDir,
+        [string]$AccountName
+    )
+
+    $dataDir = Join-Path $HomeDir "PluginData\$AccountName\AllServers"
+    $outputFile = Join-Path $dataDir 'SongbookData.plugindata'
+
+    if ($PSCmdlet.ShouldProcess($outputFile, "Write Songbook index for $AccountName")) {
+        if (-not (Test-Path -LiteralPath $dataDir)) {
+            New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
+        }
+
+        Write-SongbookPluginData -Library $Library -OutputPath $outputFile
+    }
+
+    return $outputFile
+}
+
 ########################################################################
 ################ Main Body (Console, Data, User Input) #################
 ########################################################################
 
 Clear-Host
 Write-Host $('-' * 24) $MyInvocation.MyCommand.Name / $Env:UserName $('-' * 24)
+
+if ($AllUsers -and $UserName) {
+    Write-Host "-AllUsers cannot be used with -UserName." -ForegroundColor Red
+    exit 1
+}
 
 $lotroHome = Get-LotroHomePath -OverridePath $LotroHome
 if (-not $MusicPath) {
@@ -400,19 +459,30 @@ if (-not (Test-Path -LiteralPath $MusicPath)) {
     exit 1
 }
 
-$knownUsers = Get-LotroUserNames -HomeDir $lotroHome
-$selectedUser = Select-LotroUserName -KnownUsers $knownUsers -PreferredUser $UserName
-if (-not $selectedUser) {
-    Write-Host "LOTRO username is required." -ForegroundColor Red
-    exit 1
+if ($AllUsers) {
+    $targetUsers = Get-LotroPlayerAccounts -HomeDir $lotroHome
+    if ($targetUsers.Count -eq 0) {
+        Write-Host "No LOTRO player accounts found in UserPreferences.ini or PluginData." -ForegroundColor Red
+        exit 1
+    }
+}
+else {
+    $knownUsers = Get-LotroUserNames -HomeDir $lotroHome
+    $selectedUser = Select-LotroUserName -KnownUsers $knownUsers -PreferredUser $UserName
+    if (-not $selectedUser) {
+        Write-Host "LOTRO username is required." -ForegroundColor Red
+        exit 1
+    }
+    $targetUsers = @($selectedUser)
 }
 
-$dataDir = Join-Path $lotroHome "PluginData\$selectedUser\AllServers"
-$outputFile = Join-Path $dataDir 'SongbookData.plugindata'
-
-Write-Host "LOTRO user : $selectedUser" -ForegroundColor Blue
 Write-Host "Music path : $MusicPath" -ForegroundColor Blue
-Write-Host "Output file: $outputFile" -ForegroundColor Blue
+if ($AllUsers) {
+    Write-Host "Accounts   : $($targetUsers -join ', ')" -ForegroundColor Blue
+}
+else {
+    Write-Host "LOTRO user : $($targetUsers[0])" -ForegroundColor Blue
+}
 if ($JukeOnly) {
     Write-Host "Scan mode  : juke.* folders only" -ForegroundColor Blue
 }
@@ -421,12 +491,9 @@ Write-Host $('-' * 24) $MyInvocation.MyCommand.Name / $Env:UserName $('-' * 24)
 Write-Host "`nScanning ABC files..."
 $library = Get-SongbookLibrary -MusicRoot $MusicPath -JukeOnlyMode ([bool]$JukeOnly)
 
-if ($PSCmdlet.ShouldProcess($outputFile, 'Write Songbook index')) {
-    if (-not (Test-Path -LiteralPath $dataDir)) {
-        New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
-    }
-
-    Write-SongbookPluginData -Library $library -OutputPath $outputFile
+$outputFiles = [System.Collections.Generic.List[string]]::new()
+foreach ($account in $targetUsers) {
+    $outputFiles.Add((Publish-SongbookLibrary -Library $library -HomeDir $lotroHome -AccountName $account))
 }
 
 Write-Host "`nGenerated song library." -ForegroundColor Green
@@ -434,9 +501,17 @@ Write-Host "Found $($library.Songs.Count) song files in $($library.Directories.C
 if ($library.ParseErrors -gt 0) {
     Write-Host "Skipped $($library.ParseErrors) files due to read/parse errors." -ForegroundColor Yellow
 }
+
+if ($AllUsers) {
+    Write-Host "Updated $($targetUsers.Count) player account(s)." -ForegroundColor Green
+}
+
 if (-not $WhatIfPreference) {
-    Write-Host "`nSong library saved to:`n$outputFile" -ForegroundColor Green
+    Write-Host "`nSong library saved to:"
+    foreach ($path in $outputFiles) {
+        Write-Host $path -ForegroundColor Green
+    }
 }
 else {
-    Write-Host "`nWhatIf: no file was written." -ForegroundColor Yellow
+    Write-Host "`nWhatIf: no files were written." -ForegroundColor Yellow
 }
