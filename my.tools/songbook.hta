@@ -1,0 +1,322 @@
+<head>
+<title>Songbook music library generator</title>
+
+<HTA:APPLICATION 
+     APPLICATIONNAME="Songbook music library generator"
+     SCROLL="yes"
+     SINGLEINSTANCE="yes"
+     WINDOWSTATE="normal"
+	 BORDER="thick"
+	 ICON="songbook.ico"
+>
+
+</head>
+<script language="VBScript">
+	Dim mfso, dfso, folder, files, NewFile
+	Dim musicDir, dataDir, homeDir, newHome, songCount, dirCount, lotroUser
+	Dim WshShell, objEnv, osVersion
+	ReDim songArray(0), dirArray(0)
+
+	songCount = 0
+
+Sub Songbooker()
+
+	On Error Resume Next
+	
+	'Get lotro username
+	If Not UserInput.Value = "" Then
+		lotroUser = UserInput.Value
+	Else
+		lotroUser = UserSelect(UserSelect.SelectedIndex).Text
+	End If
+	
+	If Not lotroUser = "" Then
+		'Get the location of Documents folder
+		Set WshShell = WScript.CreateObject("WScript.Shell")
+		homeDir = WshShell.SpecialFolders("MyDocuments") & "\The Lord of The Rings Online"
+		
+		musicDir = homeDir & "\Music"
+		dataDir = homeDir & "\PluginData\" & lotroUser & "\AllServers"
+		
+		'Check if Music directory exist		
+		set mfso = CreateObject("Scripting.FileSystemObject")
+		If mfso.FolderExists(musicDir) Then
+
+			'Try to create plugin data folders if they do not exist
+			Set dfso = CreateObject("Scripting.FileSystemObject")
+			If Not dfso.FolderExists(dataDir) Then
+				dim NewFolder
+				'Try to create needed folders
+				NewFolder = dfso.CreateFolder(homeDir & "\PluginData")
+				NewFolder = dfso.CreateFolder(homeDir & "\PluginData\" & lotroUser)
+				NewFolder = dfso.CreateFolder(homeDir & "\PluginData\" & lotroUser & "\AllServers")	
+
+				If Not dfso.FolderExists(dataDir) Then
+					'Folder creation failed
+					ResultOut.style.color = "red"
+					ResultOut.InnerHTML = "Could not find or create plugin data folder at " & dataDir & ". Something fishy is going on."		
+				End If
+			End If
+			
+			Set songDBFile = dfso.CreateTextFile( dataDir & "\SongbookData.plugindata", True)
+
+			songDBFile.WriteLine "return"
+			songDBFile.WriteLine "{"
+			
+			ReadDir dfso.GetFolder(musicDir).Path
+			
+			i = 0
+			songDBFile.WriteLine(VBTab & "[""Directories""] =")
+			songDBFile.WriteLine(VBTab & "{")
+
+			'Write directory table to data file 
+			For Each dirItem in dirArray
+				i = i + 1
+				If i < dirCount Then
+					songDBFile.WriteLine(VBTab & VBTab & "["& i &"] = """ & dirItem & """,")
+				ElseIf i = dirCount Then
+					songDBFile.WriteLine(VBTab & VBTab & "["& i &"] = """ & dirItem & """")
+				End If
+			Next
+
+			songDBFile.WriteLine(VBTab & "},")
+			
+			i = 0
+			songDBFile.WriteLine(VBTab & "[""Songs""] =")
+			songDBFile.WriteLine(VBTab & "{")
+			
+			'Write song table to data file
+			For Each songItem in songArray
+				Dim itempath, itemname, itemreal, itemtracks, itemsplit, tracksplit
+
+				i = i + 1
+				itemsplit = Split(songItem,"||",-1,1)
+				tracksplit = Split(itemsplit(2),",",-1,1)
+				
+				itemname = Left(itemsplit(1), Len(itemsplit(1))-4)
+							
+				songDBFile.WriteLine(VBTab & VBTab & "["& i &"] = ")
+				songDBFile.WriteLine(VBTab & VBTab & "{")			
+				songDBFile.WriteLine(VBTab & VBTab & VBTab & "[""Filepath""] = """ & itemsplit(0) & """,")
+				songDBFile.WriteLine(VBTab & VBTab & VBTab & "[""Filename""] = """ & itemname & """,")
+				'songDBFile.WriteLine(VBTab & VBTab & VBTab & "[""Tracks""] = """ & itemsplit(2) & """,")
+				songDBFile.WriteLine(VBTab & VBTab & VBTab & "[""Tracks""] =")
+				songDBFile.WriteLine(VBTab & VBTab & VBTab & "{")
+
+				For j = 3 To ubound(itemsplit)
+					songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & "[" & j-2 & "] =")
+					songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & "{")
+					songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & VBTab & "[""Id""] =""" & tracksplit(j-3) & """,")
+					songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & VBTab & "[""Name""] =""" & itemsplit(j) & """")
+						
+					If j < ubound(itemsplit) Then				
+						songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & "},")
+					Else
+						songDBFile.WriteLine(VBTab & VBTab & VBTab & VBTab & "}")
+					End If
+				Next
+				songDBFile.WriteLine(VBTab & VBTab & VBTab & "}")
+				
+					
+				If i < songCount Then
+					songDBFile.WriteLine(VBTab & VBTab & "},")
+				Else
+					songDBFile.WriteLine(VBTab & VBTab & "}")
+				End If
+				
+			Next
+			
+			songDBFile.WriteLine(VBTab & "}")
+			songDBFile.WriteLine "}"
+			songDBFile.Close
+			
+			ResultOut.style.color = "green"
+			ResultOut.InnerHTML = "Generated song library. Found " & songCount & " song files in " & dirCount & " directories.<br/><br/>Song library saved to:<br/>" & vbCrLf & dataDir & "\SongbookData.plugindata"
+			run_script.style.display = "none"
+			UserInputDiv.style.display = "none"
+			UserSelect.style.display = "none"
+			DocumentsDiv.style.display = "none"
+			help2.style.display = "none"
+			CloseWindow.style.display = "block"
+
+		Else
+			'Music folder was not found for one reason or another, maybe documents folder has been relocated to somewhere else
+			ResultOut.style.color = "red"
+			ResultOut.InnerHTML = "Music folder (" & musicDir & ") not found. Make sure it exists and contains abc song files.<br/><br/>For advanced users: If you have relocated your Documents folder, you can type the new path in the box below. Then press 'Generate song library' again."
+			DocumentsDiv.style.display = "block"
+		End If
+	Else
+		noUser.style.display = "inline"
+	End If
+End Sub
+
+'Recursive function to read all subfolders
+Sub ReadDir(sDir)
+
+	Dim songPath, dirPath
+
+	Set oDir = dfso.GetFolder(sDir)
+
+	'Add dir to dynamic array
+	redim preserve dirArray(ubound(dirArray) + 1)
+	dirPath = Replace(oDir.Path, musicDir, "", 1, -1, 1) & "/"	
+	dirArray(dirCount) = Replace(dirPath, "\", "/")
+	dirCount = dirCount + 1
+	
+	'First add song files in the folder
+	Set abcFSO = CreateObject("Scripting.FileSystemObject")
+	Dim track, tracks, realName, realNames, trimpoint
+	
+	For Each fileItem In oDir.Files
+			
+		'If abc file then add to dynamic array
+		If InStrRev(LCase(fileItem.Name), ".abc") <> 0 Or InStrRev(LCase(fileItem.Name), ".txt") Then 
+			songPath = Replace(oDir.Path, musicDir, "", 1, -1, 1) & "/"
+			songPath = Replace(songPath, "\", "/")		
+
+			'Read song name and number of tracks from file
+			tracks = ""
+			realNames = ""
+			xpos = 0
+			tpos = 0
+			Set abcFile = abcFSO.openTextFile(fileItem, 1)
+			Do While Not abcFile.AtEndOfStream
+				abcLine = abcFile.ReadLine
+				
+				If Mid(abcLine,2,1) = ":" Then
+					If InStr(abcLine, "X") = 1 Then
+						xpos = xpos + 1
+						track = Replace(abcLine, "X:","")
+						track = Replace(track, vbCr, "") 'escaping rogue line feeds
+						commentPos = InStr(track, "%")
+						If commentPos > 0 Then
+							track = Left(track, commentPos - 1)
+						End If	
+						track = Trim(track)
+						If tracks = "" Then
+							tracks = track	
+						Else
+							tracks = tracks + "," + track
+						End If
+					ElseIf InStr(abcLine, "T") = 1 Then
+						tpos = tpos + 1
+						realName = Replace(abcLine, "T:","")
+						commentPos = InStr(realName, "%")
+						If commentPos > 0 Then
+							realName = Left(realName, commentPos - 1)
+						End If					
+						realName = Trim(realName)
+						realName = Replace(realName, "\", "\\") 'escaping \ characters
+						realName = Replace(realName, """","\""") 'escaping quotes	
+						realName = Replace(realName, vbCr, "") 'escaping rogue line feeds
+						
+						If tpos = xpos Then
+							If realNames = "" Then
+								realNames = realName
+							Else
+								realNames = realNames & "||" & realName
+							End If
+						Else
+							realNames = realNames & " - " & realName
+						End If
+						
+					End If				
+
+				Else
+
+				End If
+				
+			Loop
+			
+			If tracks = "" Then tracks = "1"
+			
+			abcFile.Close
+			
+			If songCount = 0 Then
+				songArray(songCount) = songPath & "||" & fileItem.Name & "||" & tracks & "||" & realNames
+				songCount = songCount + 1
+			Else
+				redim preserve songArray(ubound(songArray) + 1)
+				songArray(songCount) = songPath & "||" & fileItem.Name & "||" & tracks & "||" & realNames
+				songCount = songCount + 1
+			End If
+		Else
+		End If
+		
+	Next
+	
+	'Then go through subfolders
+	For Each i In oDir.SubFolders
+		ReadDir i.Path
+	Next
+End Sub
+
+Sub GetLotroUser()
+
+	window.resizeTo 500,500
+	
+	Dim defaultUser, optionUser, userFile, docDir
+	Set WshShell = CreateObject("WScript.Shell")
+	Set objEnv = WshShell.Environment("Process")
+	docDir = WshShell.SpecialFolders("MyDocuments") & "\The Lord of The Rings Online"	
+	
+	userFile = docDir & "\UserPreferences.ini"
+	
+	set turbineFSO = CreateObject("Scripting.FileSystemObject")
+
+	If turbineFSO.FileExists( userFile ) Then
+		Set turbineFile = turbineFSO.openTextFile( userFile, 1)
+		Dim loginStart, loginLength
+		
+		Do While Not turbineFile.AtEndOfStream
+			turbineLine = turbineFile.ReadLine
+			
+			If InStr(turbineLine, "UserName=") Then
+				loginStart = InStr(turbineLine, "=") + 1
+				loginLength = len(turbineLine) - loginStart + 1
+				optionUser = Mid(turbineLine, loginStart, loginLength)
+				Set objOption = document.CreateElement("option")
+				objOption.Text = optionUser
+				UserSelect.Add objOption
+			End If
+		Loop
+		
+		UserSelect.style.display = "block"
+		help.InnerHTML = "Found the following LOTRO user names on this computer. Select the one you want to update your library for and click 'Build song library'. If you have a large number of songs, the process can take a moment."
+		
+	Else
+		UserInputDiv.style.display = "block"
+		help2.style.display = "block"
+		help.InnerHTML = "<span style='color: red;'>The program did not automatically find your LOTRO Username. Type your LOTRO Username to the input box below.</span> Then click 'Build song library' to start the process. If you have a large number of songs, the process can take a moment."
+		help2.InnerHTML = "<br/><br/><span style='color: green;'>Note that the login name is only used to determine the location where plugins can read and write data. That folder is named after your lotro login name.</span>"
+
+	End If
+	
+End Sub
+</script>
+
+<body onload="GetLotroUser()">
+<h2>Songbook music library generator</h2>
+<div id="help">
+</div>
+<div id="userInfo" style="padding-top:20px">
+<select id="UserSelect" style="display:none">
+</select>
+<div id="UserInputDiv" style="display:none"><span>LOTRO Username:</span><br/>
+<input type="text" value="" name="UserInput" id="UserInput"/><span id="noUser" style="color:red;display: none;padding-left: 10px;">Please enter your LOTRO Username.</span></div>
+<br/>
+</div>
+<input type="button" value="Build song library" id="run_script" onClick="Songbooker()"><br/>
+<div id="help2" style="display:none">
+</div>
+<div style="padding-top:20px"><span id="ResultOut"></span></div>
+<div id="documentsDiv" style="display:none">
+<input type="text" value="" name="DocumentsInput" id="DocumentsInput" style="width: 300px"/><br/>
+(For example, "D:\Documents" without the quotes)
+</div>
+<div id="CloseWindow" style="display:none;padding-top:20px;text-align:center">
+<input type="button" value="Close window" id="close" onClick="close()"/>
+</div>
+<span id="DebugOut"></span>
+</body>
+

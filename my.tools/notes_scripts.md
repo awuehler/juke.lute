@@ -7,6 +7,8 @@
     - [Webserver Example](#webserver-example)
   - [ZIP Creator](#zip-creator)
     - [ZIP Example](#zip-example)
+  - [Songbook Index](#songbook-index)
+    - [Songbook Example](#songbook-example)
 
 ## Jukebox Player
 
@@ -157,3 +159,32 @@ The purpose of the "ZIP Creator" is to quickly make a compressed backup file of 
     -a---           2/29/2025  4:00 PM         121572 juke.violin.zip
     
     PS C:\Users\*****\GitHub\juke.lute\my.tools>
+
+## Songbook Index
+
+Script to build the Chiran Songbook MOD melody index (`SongbookData.plugindata`). PowerShell port of the original `songbook.hta` with the same output format plus optional parameters.
+
+- Scans the LOTRO Music folder for `*.abc` and `*.txt` files
+- Writes plugin data under `Documents\The Lord of the Rings Online\PluginData\<username>\AllServers\`
+- Run after extracting or updating jukebox ZIP files (same step as `songbook.hta`)
+- Use `-JukeOnly` to index only `juke.*` folders; use `-WhatIf` to preview counts without writing
+
+### Songbook Example
+
+    PS C:\Users\*****\GitHub\juke.lute\my.tools> .\songbook.ps1
+
+    ------------------------ songbook.ps1 / ***** ------------------------
+    LOTRO user : *****
+    Music path : C:\Users\*****\Documents\The Lord of the Rings Online\Music
+    Output file: C:\Users\*****\Documents\The Lord of the Rings Online\PluginData\*****\AllServers\SongbookData.plugindata
+    ------------------------ songbook.ps1 / ***** ------------------------
+
+    Scanning ABC files...
+
+    Generated song library.
+    Found 1234 song files in 56 directories.
+
+    Song library saved to:
+    C:\Users\*****\Documents\The Lord of the Rings Online\PluginData\*****\AllServers\SongbookData.plugindata
+
+    PS C:\Users\*****\GitHub\juke.lute\my.tools> .\songbook.ps1 -UserName "MyChar" -JukeOnly
