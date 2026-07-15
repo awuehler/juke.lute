@@ -31,10 +31,8 @@
 .EXAMPLE
     .\songbook.ps1
 
-.EXAMPLE
     .\songbook.ps1 -UserName "MyChar" -JukeOnly
 
-.EXAMPLE
     .\songbook.ps1 -AllUsers -JukeOnly
 
 .NOTES
@@ -53,12 +51,21 @@ param (
 
 ########################################################################
 ################## End-User Modifications (if needed) ##################
+
 # File extensions to index (matches songbook.hta).
 $songbook_extensions = @('.abc', '.txt')
+
+# Before running this script; use "$env:MyVariable = "MyValue" to set
+# and/or override defaults. See above e.g. $MusicPath or $LotroHome.
+
 ################## End-User Modifications (if needed) ##################
 ########################################################################
 
-function Get-LotroHomePath {
+<#
+.SYNOPSIS
+    Find the full path to the LOTRO home directory.
+#>
+function GetLotroHomePath {
     param ([string]$OverridePath)
 
     if ($OverridePath) {
@@ -69,7 +76,11 @@ function Get-LotroHomePath {
     return Join-Path $documents 'The Lord of the Rings Online'
 }
 
-function Get-LotroUserNames {
+<#
+.SYNOPSIS
+    Parse the LOTRO *.ini config file for in-game character(s).
+#>
+function GetLotroUserNames {
     param ([string]$HomeDir)
 
     $userFile = Join-Path $HomeDir 'UserPreferences.ini'
@@ -89,12 +100,16 @@ function Get-LotroUserNames {
     return $names.ToArray()
 }
 
-function Get-LotroPlayerAccounts {
+<#
+.SYNOPSIS
+    Isolate the LOTRO game account(s).
+#>
+function GetLotroPlayerAccounts {
     param ([string]$HomeDir)
 
     $accounts = [System.Collections.Generic.List[string]]::new()
 
-    foreach ($name in Get-LotroUserNames -HomeDir $HomeDir) {
+    foreach ($name in GetLotroUserNames -HomeDir $HomeDir) {
         if ($accounts -notcontains $name) {
             $accounts.Add($name)
         }
@@ -108,11 +123,14 @@ function Get-LotroPlayerAccounts {
             }
         }
     }
-
     return ,$accounts.ToArray()
 }
 
-function Select-LotroUserName {
+<#
+.SYNOPSIS
+    Confirm UserName parameter input vs. LOTRO login name.
+#>
+function SelectLotroUserName {
     param (
         [string[]]$KnownUsers,
         [string]$PreferredUser
@@ -147,17 +165,24 @@ function Select-LotroUserName {
     return $manual.Trim()
 }
 
-function Format-SongbookLuaString {
+<#
+.SYNOPSIS
+    Remove extra forward slashses.
+#>
+function FormatSongbookLuaString {
     param ([string]$Value)
 
     if ($null -eq $Value) {
         return ''
     }
-
     return $Value.Replace('\', '\\').Replace('"', '\"')
 }
 
-function Get-AbcTrackInfo {
+<#
+.SYNOPSIS
+    Parse out the Title aka "T: ..." line.
+#>
+function GetAbcTrackInfo {
     param ([string]$FilePath)
 
     $tracks = ''
@@ -192,7 +217,7 @@ function Get-AbcTrackInfo {
             if ($commentPos -ge 0) {
                 $realName = $realName.Substring(0, $commentPos)
             }
-            $realName = (Format-SongbookLuaString $realName.Trim())
+            $realName = (FormatSongbookLuaString $realName.Trim())
 
             if ($tpos -eq $xpos) {
                 if ($realNames -eq '') {
@@ -230,7 +255,11 @@ function Get-AbcTrackInfo {
     }
 }
 
-function Get-SongbookRelativePath {
+<#
+.SYNOPSIS
+    Find the relative path to *.abc file.
+#>
+function GetSongbookRelativePath {
     param (
         [string]$DirectoryPath,
         [string]$MusicRoot
@@ -243,7 +272,11 @@ function Get-SongbookRelativePath {
     return '/'
 }
 
-function Add-SongbookDirectory {
+<#
+.SYNOPSIS
+    Build a path to each sub directory.
+#>
+function AddSongbookDirectory {
     param (
         [System.Collections.Generic.List[string]]$Directories,
         [string]$RelativePath
@@ -254,7 +287,11 @@ function Add-SongbookDirectory {
     }
 }
 
-function Test-JukeSongPath {
+<#
+.SYNOPSIS
+    Test for valid / accessiable path.
+#>
+function TestJukeSongPath {
     param (
         [string]$RelativePath,
         [bool]$JukeOnlyMode
@@ -263,11 +300,14 @@ function Test-JukeSongPath {
     if (-not $JukeOnlyMode) {
         return $true
     }
-
     return $RelativePath -match '^/juke[^/]*/'
 }
 
-function Read-SongbookDirectory {
+<#
+.SYNOPSIS
+    Find all *.abc files.
+#>
+function ReadSongbookDirectory {
     param (
         [System.IO.DirectoryInfo]$Directory,
         [string]$MusicRoot,
@@ -277,8 +317,8 @@ function Read-SongbookDirectory {
         [ref]$ParseErrors
     )
 
-    $relativeDir = Get-SongbookRelativePath -DirectoryPath $Directory.FullName -MusicRoot $MusicRoot
-    Add-SongbookDirectory -Directories $Directories -RelativePath $relativeDir
+    $relativeDir = GetSongbookRelativePath -DirectoryPath $Directory.FullName -MusicRoot $MusicRoot
+    AddSongbookDirectory -Directories $Directories -RelativePath $relativeDir
 
     foreach ($file in $Directory.GetFiles() | Sort-Object Name) {
         $extension = $file.Extension.ToLowerInvariant()
@@ -286,13 +326,13 @@ function Read-SongbookDirectory {
             continue
         }
 
-        $relativeFileDir = Get-SongbookRelativePath -DirectoryPath $file.DirectoryName -MusicRoot $MusicRoot
-        if (-not (Test-JukeSongPath -RelativePath $relativeFileDir -JukeOnlyMode $JukeOnlyMode)) {
+        $relativeFileDir = GetSongbookRelativePath -DirectoryPath $file.DirectoryName -MusicRoot $MusicRoot
+        if (-not (TestJukeSongPath -RelativePath $relativeFileDir -JukeOnlyMode $JukeOnlyMode)) {
             continue
         }
 
         try {
-            $trackInfo = Get-AbcTrackInfo -FilePath $file.FullName
+            $trackInfo = GetAbcTrackInfo -FilePath $file.FullName
         }
         catch {
             $ParseErrors.Value++
@@ -317,13 +357,17 @@ function Read-SongbookDirectory {
         if ($JukeOnlyMode -and $relativeDir -eq '/' -and $subDir.Name -notlike 'juke*') {
             continue
         }
-        Read-SongbookDirectory -Directory $subDir -MusicRoot $MusicRoot `
+        ReadSongbookDirectory -Directory $subDir -MusicRoot $MusicRoot `
             -Directories $Directories -Songs $Songs -JukeOnlyMode $JukeOnlyMode `
             -ParseErrors $ParseErrors
     }
 }
 
-function Get-SongbookLibrary {
+<#
+.SYNOPSIS
+    Get root directory of *.abc files.
+#>
+function GetSongbookLibrary {
     param (
         [string]$MusicRoot,
         [bool]$JukeOnlyMode
@@ -334,7 +378,7 @@ function Get-SongbookLibrary {
     $parseErrors = 0
 
     $musicDir = Get-Item -LiteralPath $MusicRoot
-    Read-SongbookDirectory -Directory $musicDir -MusicRoot $musicDir.FullName `
+    ReadSongbookDirectory -Directory $musicDir -MusicRoot $musicDir.FullName `
         -Directories $directories -Songs $songs -JukeOnlyMode $JukeOnlyMode `
         -ParseErrors ([ref]$parseErrors)
 
@@ -345,7 +389,11 @@ function Get-SongbookLibrary {
     }
 }
 
-function Write-SongbookPluginData {
+<#
+.SYNOPSIS
+    Format songbook data (as per Chiran MOD).
+#>
+function WriteSongbookPluginData {
     param (
         [object]$Library,
         [string]$OutputPath
@@ -409,7 +457,11 @@ function Write-SongbookPluginData {
     [System.IO.File]::WriteAllText($OutputPath, $sb.ToString(), $utf8NoBom)
 }
 
-function Publish-SongbookLibrary {
+<#
+.SYNOPSIS
+    Write the songbook file.
+#>
+function PublishSongbookLibrary {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [object]$Library,
@@ -425,9 +477,8 @@ function Publish-SongbookLibrary {
             New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
         }
 
-        Write-SongbookPluginData -Library $Library -OutputPath $outputFile
+        WriteSongbookPluginData -Library $Library -OutputPath $outputFile
     }
-
     return $outputFile
 }
 
@@ -443,7 +494,7 @@ if ($AllUsers -and $UserName) {
     exit 1
 }
 
-$lotroHome = Get-LotroHomePath -OverridePath $LotroHome
+$lotroHome = GetLotroHomePath -OverridePath $LotroHome
 if (-not $MusicPath) {
     $MusicPath = Join-Path $lotroHome 'Music'
 }
@@ -460,15 +511,15 @@ if (-not (Test-Path -LiteralPath $MusicPath)) {
 }
 
 if ($AllUsers) {
-    $targetUsers = Get-LotroPlayerAccounts -HomeDir $lotroHome
+    $targetUsers = GetLotroPlayerAccounts -HomeDir $lotroHome
     if ($targetUsers.Count -eq 0) {
         Write-Host "No LOTRO player accounts found in UserPreferences.ini or PluginData." -ForegroundColor Red
         exit 1
     }
 }
 else {
-    $knownUsers = Get-LotroUserNames -HomeDir $lotroHome
-    $selectedUser = Select-LotroUserName -KnownUsers $knownUsers -PreferredUser $UserName
+    $knownUsers = GetLotroUserNames -HomeDir $lotroHome
+    $selectedUser = SelectLotroUserName -KnownUsers $knownUsers -PreferredUser $UserName
     if (-not $selectedUser) {
         Write-Host "LOTRO username is required." -ForegroundColor Red
         exit 1
@@ -489,11 +540,11 @@ if ($JukeOnly) {
 Write-Host $('-' * 24) $MyInvocation.MyCommand.Name / $Env:UserName $('-' * 24)
 
 Write-Host "`nScanning ABC files..."
-$library = Get-SongbookLibrary -MusicRoot $MusicPath -JukeOnlyMode ([bool]$JukeOnly)
+$library = GetSongbookLibrary -MusicRoot $MusicPath -JukeOnlyMode ([bool]$JukeOnly)
 
 $outputFiles = [System.Collections.Generic.List[string]]::new()
 foreach ($account in $targetUsers) {
-    $outputFiles.Add((Publish-SongbookLibrary -Library $library -HomeDir $lotroHome -AccountName $account))
+    $outputFiles.Add((PublishSongbookLibrary -Library $library -HomeDir $lotroHome -AccountName $account))
 }
 
 Write-Host "`nGenerated song library." -ForegroundColor Green

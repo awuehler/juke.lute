@@ -5,15 +5,15 @@
       "author": "awuehler"
     },
     {
-      "content": "Repository layout has two top-level directories. (1) 999.songs/ — distribution archives and archive documentation. Contains juke.lute.zip (largest and most important asset, ~30MB, primary lute collection), plus secondary instrument archives: juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip. Also contains README.md (download and LOTRO deployment instructions) and notes_folders.md (folder taxonomy: folk, formal, long2, long4, long6, quick, quiet, rural, sadly, show, spirit, jams, sideb, older). (2) my.tools/ — automation scripts and tool documentation. Contains jukebox.ps1 (random ABC playback tester), zip_loop.ps1 (archive packager), web_get.py (HTTP file server), web_env.py (server config), README.md, notes_scripts.md, and notes_playlists.md. Root README.md provides project introduction and caveats.",
+      "content": "Repository layout has two top-level directories. (1) 999.songs/ — distribution archives and archive documentation. Contains juke.lute.zip (largest and most important asset, ~30MB, primary lute collection), plus secondary instrument archives: juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip. Also contains README.md (download and LOTRO deployment instructions) and notes_folders.md (folder taxonomy). (2) my.tools/ — automation scripts and tool documentation. Contains jukebox.ps1 (random ABC playback tester with skip/quit and process-tree cleanup), zip_loop.ps1 (archive packager with -MusicPath/-Destination/-Compression/-WhatIf), songbook.ps1 (PowerShell Songbook index builder; preferred), songbook.hta (original Chiran HTA reference), web_get.py (HTTP file server), web_env.py (server config), README.md, notes_scripts.md (usage examples including Songbook Index), and notes_playlists.md. Root README.md provides project introduction and caveats.",
       "author": "awuehler"
     },
     {
-      "content": "Content organization philosophy: 'play by ear' self-organizing buckets, NOT strict hierarchical taxonomy. Files may appear in multiple folders when they fit multiple moods or durations. Filenames use long descriptive format: <Artist_Name>-<Song_Name>(instrument).abc — intentionally incompatible with LOTRO /play command-line shortcuts, optimized for human readability in Songbook MOD panels. Chiran Songbook (stable, unmaintained, larger panel) or Badger SongbookBB (actively maintained) is mandatory. After extracting archives to C:\\Users\\<user>\\Documents\\The Lord of the Rings Online\\Music\\juke.lute, users must run songbook.hta to rebuild the ABC index.",
+      "content": "Content organization philosophy: 'play by ear' self-organizing buckets, NOT strict hierarchical taxonomy. Files may appear in multiple folders when they fit multiple moods or durations. Filenames use long descriptive format: <Artist_Name>-<Song_Name>(instrument).abc — intentionally incompatible with LOTRO /play command-line shortcuts, optimized for human readability in Songbook MOD panels. Chiran Songbook (stable, unmaintained, larger panel) or Badger SongbookBB (actively maintained) is mandatory. After extracting archives to C:\\Users\\<user>\\Documents\\The Lord of the Rings Online\\Music\\juke.lute, users must rebuild the ABC index with songbook.ps1 (preferred PowerShell port) or the original songbook.hta.",
       "author": "awuehler"
     },
     {
-      "content": "Key script relationships and data flow: (A) Development loop — edit ABC files in LOTRO Music folder using Maestro, EasyABC, or text editors; test with jukebox.ps1 which calls AbcPlayer.exe or Maestro.exe via ProbabilityPick(), PlayMelody(), NextMelody() functions; jukebox reads $music_abc_path (default LOTRO Music folder), tracks $music_abc_history repeats, and uses $music_abc_pause between melodies. (B) Packaging loop — zip_loop.ps1 scans juke.* folders in the LOTRO Music directory, compresses each into 999.songs/juke.<instrument>.zip, and purges stale archives. Must be run from my.tools/ directory. (C) Distribution loop — web_get.py serves the Music folder over HTTP using web_env.py settings (LOCAL_HOST, LOCAL_PORT, TARGET_EXTENSIONS for .abc and .mid). (D) In-game loop — download ZIP from GitHub, extract to LOTRO Music folder, rebuild Songbook index, play via MOD.",
+      "content": "Key script relationships and data flow: (A) Development loop — edit ABC files in the LOTRO Music folder; test with jukebox.ps1 (params: -MusicPath, -PlayerPath, -EditorPath, -PauseSeconds, -History). jukebox scans *.abc paths as strings, builds a lowercase folder menu (shared leaves like favs, leading instruments bassoon/flute/violin, then other instrument paths with juke. prefix stripped), filters via GetFolderMelodyPool, picks via ProbabilityPick against $script:MelodyTrack, parses T: title+duration via GetAbcTitleInfo, launches AbcPlayer/Maestro through PlayMelody with unique TEMP redirect logs, waits via WaitMelodyInterval (any key=skip, Q/Escape=quit), and always stops the player process tree in a try/finally. (B) Packaging loop — zip_loop.ps1 uses $PSScriptRoot (runnable from anywhere), scans juke* folders under Music (default Documents path), purges only matching juke*.zip under 999.songs/, then Compress-Archive. Supports -MusicPath, -Destination, -Compression, -WhatIf. (C) Index loop — songbook.ps1 (or songbook.hta) writes SongbookData.plugindata under PluginData\\<user>\\AllServers\\; songbook.ps1 adds -JukeOnly, -AllUsers, -WhatIf, -UserName, -MusicPath, -LotroHome. (D) Distribution loop — web_get.py serves ABC/MIDI over HTTP using web_env.py. (E) In-game loop — download ZIP → extract to Music → rebuild Songbook index → play via MOD.",
       "author": "awuehler"
     },
     {
@@ -21,7 +21,7 @@
       "author": "awuehler"
     },
     {
-      "content": "Documentation priorities for wiki generation: Use the explicit 'pages' array in this file as the definitive wiki structure — do not substitute auto-generated page titles. The juke.lute.zip archive and my.tools/jukebox.ps1 are the two highest-priority components. Secondary archives in 999.songs/ should be documented but subordinate to the primary lute collection. Emphasize the dual consumption paths: production (Songbook MOD in LOTRO) vs development (jukebox.ps1 + external players). Include the manual-only workflow characteristic — no automation triggers on commit. Reference the notes_*.md files in both directories for detailed operational examples. External dependencies not in repo: Maestro/AbcPlayer, EasyABC, Notepad++/VSCodium, FFmpeg, WaoN, PowerShell 7, Python 3.x.",
+      "content": "Documentation priorities for wiki generation: Use the explicit 'pages' array in this file as the definitive wiki structure — do not substitute auto-generated page titles. Highest-priority components: juke.lute.zip, my.tools/jukebox.ps1, and my.tools/songbook.ps1 (index rebuild after every extract). Also document zip_loop.ps1 packaging and songbook.hta as the unmodified Chiran reference. Emphasize dual consumption paths: production (Songbook MOD in LOTRO) vs development (jukebox.ps1 + AbcPlayer/Maestro). Include the manual-only workflow — no automation triggers on commit. Reference notes_scripts.md for console examples (Jukebox Player, ZIP Creator, Songbook Index, Localhost Webserver). External dependencies not in repo: Maestro/AbcPlayer, EasyABC, Notepad++/VSCodium, FFmpeg, WaoN, PowerShell 7, Python 3.x.",
       "author": "awuehler"
     }
   ],
@@ -31,7 +31,7 @@
       "purpose": "Introduce the juke.lute repository, explaining its purpose as a collection of ABC music files for LOTRO solo lute play, and providing a high-level overview of the archive collections and tooling ecosystem",
       "page_notes": [
         {
-          "content": "Primary sources: README.md (project intro, caveats, author background), 999.songs/README.md (jukebox metaphor), my.tools/README.md (tooling overview). Include a high-level architecture diagram showing the two top-level directories (999.songs/ and my.tools/) and the four workflows: edit → test → package → deploy. Emphasize this is a music content repository with helper scripts, not an application framework. Mention MIT license, private non-commercial use, ABC notation v2.11, and the DeepWiki badge link in README.md."
+          "content": "Primary sources: README.md (project intro, caveats, author background), 999.songs/README.md (jukebox metaphor), my.tools/README.md (tooling overview), my.tools/notes_scripts.md (script examples). Include a high-level architecture diagram showing 999.songs/ and my.tools/ and the five workflows: edit → jukebox test → zip_loop package → songbook index → deploy/share. Emphasize this is a music content repository with helper scripts, not an application framework. Mention MIT license, private non-commercial use, ABC notation v2.11, and the DeepWiki badge link in README.md. Note PowerShell tools: jukebox.ps1, zip_loop.ps1, songbook.ps1; Python: web_get.py/web_env.py; reference HTA: songbook.hta."
         }
       ]
     },
@@ -40,7 +40,7 @@
       "purpose": "Document the instrument-specific ZIP archives that contain ABC music files, emphasizing the critical juke.lute.zip archive and explaining the archive format and deployment lifecycle",
       "page_notes": [
         {
-          "content": "Focus on 999.songs/ directory. List all ZIP archives: juke.lute.zip (~30MB, primary), juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip with approximate sizes from notes_scripts.md examples. Explain each ZIP contains a folder hierarchy of *.abc files organized by mood/duration buckets. Document the archive lifecycle: edited in LOTRO Music folder → packaged by zip_loop.ps1 → stored in 999.songs/ → downloaded by users → extracted back to LOTRO Music folder. Reference 999.songs/README.md for download instructions and notes_folders.md for internal folder taxonomy."
+          "content": "Focus on 999.songs/ directory. List all ZIP archives: juke.lute.zip (~30MB, primary), juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip with approximate sizes from notes_scripts.md examples. Explain each ZIP contains a folder hierarchy of *.abc files organized by mood/duration buckets. Document the archive lifecycle: edited in LOTRO Music folder → packaged by zip_loop.ps1 → stored in 999.songs/ → downloaded by users → extracted back to LOTRO Music folder → indexed by songbook.ps1 (or songbook.hta). Reference 999.songs/README.md for download instructions and notes_folders.md for internal folder taxonomy."
         }
       ]
     },
@@ -50,7 +50,7 @@
       "parent": "Music Archive Collections",
       "page_notes": [
         {
-          "content": "juke.lute.zip is the dominant asset (importance score 91.17 in prior DeepWiki analysis). Document internal folder structure from notes_folders.md: folk, formal, jams, long2, long4, long6, quick, quiet, rural, sadly, show, spirit, sideb, older. Show example filenames from 999.songs/README.md (e.g. Led_Zeppelin-Stairway_To_Heaven(lute).abc in long6/). Explain deployment target path: C:\\Users\\<user>\\Documents\\The Lord of the Rings Online\\Music\\juke.lute\\. Note that ABC files inside the ZIP are the actual deliverable — the repo stores compressed binaries, not loose .abc source files. Include a data-flow diagram from zip_loop.ps1 source path to 999.songs/juke.lute.zip to LOTRO Music folder."
+          "content": "juke.lute.zip is the dominant asset (importance score 91.17 in prior DeepWiki analysis). Document internal folder structure from notes_folders.md: folk, formal, jams, long2, long4, long6, quick, quiet, rural, sadly, show, spirit, sideb, older (on-disk paths under juke.lute; jukebox.ps1 displays them as lute\\folk after stripping the juke. prefix). Show example filenames from 999.songs/README.md (e.g. Led_Zeppelin-Stairway_To_Heaven(lute).abc). Explain deployment target path: C:\\Users\\<user>\\Documents\\The Lord of the Rings Online\\Music\\juke.lute\\. Note that ABC files inside the ZIP are the actual deliverable — the repo stores compressed binaries, not loose .abc source files. Include a data-flow diagram from zip_loop.ps1 Music source path to 999.songs/juke.lute.zip to LOTRO Music folder to songbook.ps1 PluginData index."
         }
       ]
     },
@@ -60,7 +60,7 @@
       "parent": "Music Archive Collections",
       "page_notes": [
         {
-          "content": "Cover juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip in 999.songs/. These are secondary collections tuned for other LOTRO instruments (fiddle, bassoon-lute duets, flute, violin). Filename convention appends instrument tag: (fiddle), (duet), (flute), (violin), (bassoon), (lute). jukebox.ps1 example in notes_scripts.md shows cross-instrument folders like BASSOON-LUTE, FLUTE-TTF, LUTE-VIOLIN. Explain these archives share the same bucket organization philosophy but target different in-game instrument combinations. Sizes vary widely: juke.flute.zip (~246KB) vs juke.duet.zip (~7MB)."
+          "content": "Cover juke.fiddle.zip, juke.duet.zip, juke.flute.zip, juke.violin.zip, juke.bassoon.zip in 999.songs/. These are secondary collections tuned for other LOTRO instruments (fiddle, bassoon-lute duets, flute, violin). Filename convention appends instrument tag: (fiddle), (duet), (flute), (violin), (bassoon), (lute). jukebox.ps1 folder menu (notes_scripts.md) shows lowercase display labels such as favs, bassoon, flute, violin, lute\\folk, duet\\bassoon-lute — shared leaf favs across instruments, leading instrument roots first, then remaining paths. Explain these archives share the same bucket organization philosophy but target different in-game instrument combinations. Sizes vary widely: juke.flute.zip (~246KB) vs juke.duet.zip (~7MB)."
         }
       ]
     },
@@ -70,36 +70,36 @@
       "parent": "Music Archive Collections",
       "page_notes": [
         {
-          "content": "Primary source: 999.songs/README.md ('play by ear' section) and 999.songs/notes_folders.md. Key concepts: (1) self-organizing buckets, not strict hierarchy; (2) files may exist in multiple folders; (3) jazz-improvisation metaphor for session organization; (4) filename format <Artist_Name>-<Song_Name>(instrument).abc with long descriptive names; (5) NO /play command-line support by design — Songbook MOD required; (6) 'Traditional' prefix when composer unknown; (7) folder purposes: folk=traditional, formal=classical, long6=6+ minutes, quick=fast tempo, quiet=quiet locations, sadly=heartfelt, show=movies/shows, spirit=holidays, sideb=needs edits, jams=playlists. Include the folder listing table from notes_folders.md."
+          "content": "Primary source: 999.songs/README.md ('play by ear' section) and 999.songs/notes_folders.md. Key concepts: (1) self-organizing buckets, not strict hierarchy; (2) files may exist in multiple folders; (3) jazz-improvisation metaphor for session organization; (4) filename format <Artist_Name>-<Song_Name>(instrument).abc with long descriptive names; (5) NO /play command-line support by design — Songbook MOD required; (6) 'Traditional' prefix when composer unknown; (7) folder purposes: folk=traditional, formal=classical, long6=6+ minutes, quick=fast tempo, quiet=quiet locations, sadly=heartfelt, show=movies/shows, spirit=holidays, sideb=needs edits, jams=playlists. Include the folder listing table from notes_folders.md. Note jukebox display paths strip the juke. prefix (juke.lute\\folk → lute\\folk)."
         }
       ]
     },
     {
       "title": "Jukebox Playback System",
-      "purpose": "Document the jukebox.ps1 random player system for continuous ABC file playback, including architecture, player selection, and usage patterns",
+      "purpose": "Document the jukebox.ps1 random player system for continuous ABC file playback, including architecture, player selection, skip/quit controls, and usage patterns",
       "page_notes": [
         {
-          "content": "Primary source: my.tools/jukebox.ps1 and my.tools/notes_scripts.md (Jukebox Player section). Document the script's purpose: random continuous ABC playback for debugging and enjoyment outside LOTRO. Architecture: user selects player (1=AbcPlayer, 2=Maestro) → scans $music_abc_path recursively for *.abc → builds $folder_array from subfolder names → user picks folder or ALL → main do-until loop calls NextMelody then PlayMelody then Start-Sleep. Key functions: ProbabilityPick(), PlayMelody(), NextMelody(), FormatTimeToSecond(). Global state: $global:MelodyTrack (history), $global:PreviousMelody. Exit via CTRL-C. Include an execution flow diagram from script launch through melody selection to player launch."
+          "content": "Primary source: my.tools/jukebox.ps1 and my.tools/notes_scripts.md (Jukebox Player section). Purpose: random continuous ABC playback for debugging and enjoyment outside LOTRO. Architecture: optional CLI overrides → player prompt (1=AbcPlayer, 2=Maestro) → validate chosen exe → scan Music folder for *.abc FullName strings → GetMusicFolderList menu → GetFolderMelodyPool pre-filter → seed $script:MelodyTrack → try/finally play loop. Each iteration: NextMelody (ProbabilityPick + GetAbcTitleInfo) → display Title/Playtime/Wait/Selection → PlayMelody → WaitMelodyInterval. Controls: any key skips (stops player tree), Q or Escape quits; finally always calls StopJukeboxPlayer. Key helpers: ConvertFrom/ToJukeRelativePath, GetFolderMelodyPool, GetMusicFolderList, StopProcessTree, StopMaestroJavaChildren, RemovePlayerLogFiles/ClearStalePlayerLogs, PlayMelody, GetAbcTitleInfo, ConvertDurationToSeconds, ReadMelodyControlKey, WaitMelodyInterval. Include an execution flow diagram from launch through folder pick to skip/quit."
         }
       ]
     },
     {
       "title": "Jukebox Player Configuration",
-      "purpose": "Detailed explanation of jukebox.ps1 configuration parameters, folder selection, history tracking, and the main execution loop",
+      "purpose": "Detailed explanation of jukebox.ps1 parameters, End-User Modifications defaults, folder menu rules, history tracking, and title/duration parsing",
       "parent": "Jukebox Playback System",
       "page_notes": [
         {
-          "content": "Document the 'End-User Modifications' block in jukebox.ps1 (lines 55-71): $music_abc_history=3 (avoid repeat melodies), $music_abc_pause=3 (seconds between tunes), $music_abc_fallback='(0:55)' (default duration when T: field lacks mm:ss), $music_abc_path (default LOTRO Music folder), $music_player (AbcPlayer.exe path), $music_editor (Maestro.exe path). Explain folder selection UI: numbered list built from unique subfolder names across all juke boxes, plus ALL option as default. History tracking: $global:MelodyTrack seeded with $music_abc_history entries via ProbabilityPick; NextMelody() shifts array and appends new pick. Duration extraction: parses T: header line for (mm:ss) pattern using regex. Reference PowerShell execution policy requirements from script .NOTES section."
+          "content": "CLI parameters (CmdletBinding): -MusicPath, -PlayerPath, -EditorPath, -PauseSeconds (0–3600; -1=default), -History (0–100; -1=default). End-User Modifications defaults: $music_abc_history=3, $music_abc_pause=3, $music_abc_fallback='0:55', Documents-based $music_abc_path, default Maestro install paths for AbcPlayer/Maestro, $music_shared_folders=@('favs'), $music_leading_instruments=@('bassoon','flute','violin'). Folder menu: lowercase; shared allowlisted leaves that exist under any juke.*; then leading bare instrument roots; then remaining instrument-relative paths with juke. stripped; plus 'all'. History: $script:MelodyTrack (not global); InitializeMelodyHistory seeds the queue; ProbabilityPick prefers paths not in recent history. GetAbcTitleInfo reads the first T: line for title text and optional (mm:ss); ConvertDurationToSeconds for track length; Wait = track + pause (displayed separately as Playtime vs Wait). Paths unquoted once via GetUnquotedPath. Reference PowerShell execution policy notes in script .NOTES and the console example in notes_scripts.md."
         }
       ]
     },
     {
       "title": "External Player Integration",
-      "purpose": "Document integration with AbcPlayer.exe and Maestro.exe, including player selection, file launching, and playback control mechanisms",
+      "purpose": "Document integration with AbcPlayer.exe and Maestro.exe, including process lifecycle, stdout redirect logs, and cleanup on skip/quit",
       "parent": "Jukebox Playback System",
       "page_notes": [
         {
-          "content": "Both players come from the Maestro project (github.com/digero/maestro). Default install path: C:\\Program Files (x86)\\Maestro\\. PlayMelody() function launches via Start-Process with -RedirectStandardOutput .\\NUL -WindowStyle Hidden. Option 1 ($music_player): AbcPlayer.exe — lightweight playback only. Option 2 ($music_editor): Maestro.exe — full ABC editor that also plays. Argument passed is $new_melody[1] ($music_maestro), a double-quoted full path. Maestro is also used upstream in the ABC creation pipeline for MIDI-to-ABC conversion (see my.tools/README.md MIDI section). Note: jukebox uses external players for development testing; in-game playback uses LOTRO's native /music system via Songbook MOD."
+          "content": "Both players come from the Maestro project (github.com/digero/maestro). Default install path: C:\\Program Files (x86)\\Maestro\\. PlayMelody receives validated -PlayerExePath and -AbcPath (structured NextMelody object: Path, Title, Duration). Start-Process redirects stdout/stderr to unique %TEMP%\\jukebox-player-<stamp>-<guid>.{stdout,stderr}.log files (avoids relaunch conflicts); StopJukeboxPlayer deletes tracked logs and ClearStalePlayerLogs prunes older jukebox-player-*.log files. StopProcessTree recursively kills the launcher and children; StopMaestroJavaChildren also stops java/javaw whose ExecutablePath is under the Maestro install directory (WinRun4J often leaves a JVM behind). try/finally ensures cleanup on quit, error, or interrupt. Option 1: AbcPlayer.exe (playback). Option 2: Maestro.exe (editor+player). In-game playback remains LOTRO /music via Songbook MOD — jukebox is for out-of-game testing."
         }
       ]
     },
@@ -108,17 +108,17 @@
       "purpose": "Comprehensive guide to creating, converting, editing, and managing ABC music files, from source acquisition through MIDI conversion to final ABC format",
       "page_notes": [
         {
-          "content": "This is the parent page for the full ABC content lifecycle. Document the end-to-end pipeline as a diagram: LIVE → AUDIO → MIDI → ABC → edit/de-enshittify → jukebox test → zip_loop package → git push → user download → LOTRO deploy. Primary sources: my.tools/README.md (sections: ABC, MIDI, AUDIO, LIVE), notes_playlists.md, notes_scripts.md. Emphasize every step is manual — no automation scripts exist for conversion. Key constraints: ABC v2.11 format, ~150KB LOTRO file size limit, solo lute optimization, T: field must include (mm:ss) duration for jukebox.ps1 timing. Cross-reference child pages for zip_loop.ps1, acquisition pipeline, playlist merging, and editing tools."
+          "content": "Parent page for the full ABC content lifecycle. End-to-end diagram: LIVE → AUDIO → MIDI → ABC → edit/de-enshittify → jukebox.ps1 test → zip_loop.ps1 package → git push → user download → extract → songbook.ps1 index → LOTRO play. Primary sources: my.tools/README.md (ABC, MIDI, AUDIO, LIVE), notes_playlists.md, notes_scripts.md. Emphasize every conversion step is manual — no automation scripts exist for LIVE/AUDIO/MIDI conversion. Key constraints: ABC v2.11, ~150KB LOTRO file size limit, solo lute optimization, T: field should include (mm:ss) for accurate jukebox timing (fallback 0:55 when missing). Cross-reference child pages for zip_loop.ps1, acquisition pipeline, playlist merging, and editing tools."
         }
       ]
     },
     {
       "title": "Archive Creation with zip_loop.ps1",
-      "purpose": "Document the automated ZIP archive creation process, including folder scanning, compression, purging old archives, and the deployment workflow",
+      "purpose": "Document the automated ZIP archive creation process, including parameters, folder scanning, purge rules, compression, and the deployment workflow",
       "parent": "ABC File Management Workflow",
       "page_notes": [
         {
-          "content": "Primary source: my.tools/zip_loop.ps1 and notes_scripts.md (ZIP Creator section). Must run from my.tools/ directory (CWD-dependent paths). Functions: JukeFolders() scans $MyAbcDirectory for folders matching 'juke*' pattern, calls Compress-Archive with -Update flag; TargetPrevious() lists or purges existing .zip files in 999.songs/. Main flow: display BEFORE state → purge old ZIPs → JukeFolders() → display AFTER state. Key variables: $MyCompression='Fastest', $MyAbcDirectory (LOTRO Music folder), $MyParentDirectory (repo root). Source path pattern: ..\\..\\Documents\\The Lord of the Rings Online\\Music\\juke.<instrument>\\. Output: ../999.songs/juke.<instrument>.zip. Include before/after directory listing example from notes_scripts.md."
+          "content": "Primary source: my.tools/zip_loop.ps1 and notes_scripts.md (ZIP Creator section). Runnable from any directory via $PSScriptRoot (repo root = parent of my.tools). Parameters: -MusicPath (default Documents\\...\\Music), -Destination (default <repo>\\999.songs), -Compression Fastest|Optimal|NoCompression (default Fastest), -WhatIf (SupportsShouldProcess). Flow: ShowJukeArchives BEFORE → RemoveJukeArchives (only juke*.zip, -Force) → NewJukeArchives (Compress-Archive per juke* Music folder) → ShowJukeArchives AFTER. Does not depend on relative ..\\\\Documents paths. Include before/after listing example from notes_scripts.md. Output names: juke.<instrument>.zip matching each source folder name."
         }
       ]
     },
@@ -148,7 +148,7 @@
       "parent": "ABC File Management Workflow",
       "page_notes": [
         {
-          "content": "Primary source: my.tools/README.md (Applications, ABC, MIDI, Resources sections). Desktop tools: Notepad++ / VSCodium (text editing), EasyABC (ABC visualization/editing), Maestro/AbcPlayer (MIDI conversion and playback), VLC (media). Scripting: PowerShell 7 (jukebox.ps1, zip_loop.ps1), Python 3 (web_get.py), Bash via WSL (cross-platform file operations). ABC resources: abcnotation.com, trillian.mit.edu abc tunefind, freesheetmusic.net directory, kunstderfuge.com. MIDI resources: FreeMIDI, MIDI World, Bit MIDI, etc. Preprocessing: FFmpeg (audio), WaoN (audio-to-MIDI). Note many ABC/MIDI websites are outdated — WayBack Machine recommended. Chiran_MOD-02.png in my.tools/ shows Songbook MOD settings screenshot."
+          "content": "Primary source: my.tools/README.md (Applications, ABC, MIDI, Resources sections). Desktop tools: Notepad++ / VSCodium (text editing), EasyABC (ABC visualization/editing), Maestro/AbcPlayer (MIDI conversion and playback), VLC (media). Scripting: PowerShell 7 (jukebox.ps1, zip_loop.ps1, songbook.ps1), Python 3 (web_get.py), Bash via WSL (cross-platform file operations). ABC resources: abcnotation.com, trillian.mit.edu abc tunefind, freesheetmusic.net directory, kunstderfuge.com. MIDI resources: FreeMIDI, MIDI World, Bit MIDI, etc. Preprocessing: FFmpeg (audio), WaoN (audio-to-MIDI). Note many ABC/MIDI websites are outdated — WayBack Machine recommended. Chiran_MOD-02.png in my.tools/ shows Songbook MOD settings screenshot."
         }
       ]
     },
@@ -186,17 +186,27 @@
       "purpose": "Explain how ABC archives integrate with Lord of the Rings Online, including the mandatory Songbook MOD requirement and deployment to the LOTRO Music folder",
       "page_notes": [
         {
-          "content": "Primary sources: 999.songs/README.md, my.tools/README.md (Modifications section). LOTRO supports ABC notation v2.11 via in-game /music command. This repository's long filenames make /play <filename> impractical — Songbook MOD is mandatory for browsing and selecting tunes. Two MOD options: Chiran Songbook (stable, unmaintained, larger panel view — preferred) and Badger SongbookBB (active development at linawillow.org). ABC files deploy to: C:\\Users\\<user>\\Documents\\The Lord of the Rings Online\\Music\\. After every archive update, songbook.hta must be rerun to rebuild the file index. Include diagram showing GitHub ZIP → extract → LOTRO Music folder → songbook.hta index → in-game MOD panel → /music playback."
+          "content": "Primary sources: 999.songs/README.md, my.tools/README.md (Modifications section), my.tools/notes_scripts.md (Songbook Index). LOTRO supports ABC notation v2.11 via in-game /music. Long filenames make /play impractical — Songbook MOD is mandatory. MOD options: Chiran Songbook (stable, unmaintained, larger panel — preferred) and Badger SongbookBB (active at linawillow.org). Deploy ABC files to Documents\\The Lord of the Rings Online\\Music\\. After every archive update, rebuild the index with songbook.ps1 (preferred) or original songbook.hta. Diagram: GitHub ZIP → extract → Music\\juke.* → songbook.ps1 → PluginData\\<user>\\AllServers\\SongbookData.plugindata → in-game MOD panel → /music playback."
         }
       ]
     },
     {
       "title": "Deployment to LOTRO Music Folder",
-      "purpose": "Step-by-step guide for extracting archives, organizing files in the LOTRO Music directory, running songbook.hta, and the manual update workflow",
+      "purpose": "Step-by-step guide for extracting archives, organizing files in the LOTRO Music directory, rebuilding the Songbook index, and the manual update workflow",
       "parent": "LOTRO Game Integration",
       "page_notes": [
         {
-          "content": "Primary source: 999.songs/README.md (Download the jukebox section). Step-by-step: (1) Download latest juke.<instrument>.zip from GitHub 999.songs/; (2) Remove or rename previous juke folder in LOTRO Music directory; (3) Extract ZIP to create new juke.lute folder (e.g. ..\\Music\\juke.lute\\); (4) Run songbook.hta to rebuild ABC file index; (5) Launch LOTRO, enable Songbook MOD, browse and play. Update workflow repeats steps 1-4 for each new release. Example PowerShell dir output in README.md shows expected folder structure. Warning from notes_folders.md: always remove previous juke folders before extracting new ZIP to avoid stale files. No automated update mechanism — user must manually check GitHub for new ZIP versions."
+          "content": "Primary source: 999.songs/README.md (Download the jukebox section) and notes_scripts.md (Songbook Index). Steps: (1) Download latest juke.<instrument>.zip from GitHub 999.songs/; (2) Remove or rename previous juke folder in LOTRO Music directory; (3) Extract ZIP to create new juke.<instrument> folder; (4) Run .\\songbook.ps1 from my.tools (or songbook.hta) to rebuild SongbookData.plugindata; (5) Launch LOTRO, enable Songbook MOD, browse and play. Optional: songbook.ps1 -JukeOnly for jukebox-only index; -AllUsers to update every local LOTRO account; -WhatIf to preview counts. Update workflow repeats steps 1–4 for each new release. Warning: always remove previous juke folders before extracting new ZIP to avoid stale files. No automated update mechanism."
+        }
+      ]
+    },
+    {
+      "title": "Songbook Index Builder",
+      "purpose": "Document songbook.ps1 and the reference songbook.hta tool used to generate SongbookData.plugindata for the Chiran Songbook MOD",
+      "parent": "LOTRO Game Integration",
+      "page_notes": [
+        {
+          "content": "Primary sources: my.tools/songbook.ps1, my.tools/songbook.hta (unmodified Chiran HTA reference with attribution comments), notes_scripts.md (Songbook Index section). songbook.ps1 is a PowerShell port that preserves Chiran SongbookData.plugindata format while adding parameters: -UserName (LOTRO login / PluginData folder; prompted if omitted), -MusicPath, -LotroHome (when Documents is relocated), -JukeOnly (index only juke.* trees), -AllUsers (write plugindata for every account found via UserPreferences.ini / PluginData; cannot combine with -UserName), -WhatIf (scan/report without writing). Scans *.abc and *.txt under Music (same extensions as HTA). Output: Documents\\The Lord of the Rings Online\\PluginData\\<user>\\AllServers\\SongbookData.plugindata. Prefer songbook.ps1 for day-to-day rebuilds; keep songbook.hta as the vendor-format reference. Example console output and -JukeOnly/-AllUsers usage are in notes_scripts.md."
         }
       ]
     },
@@ -206,7 +216,7 @@
       "parent": "LOTRO Game Integration",
       "page_notes": [
         {
-          "content": "Primary sources: 999.songs/README.md (NO in-game command-line support section), my.tools/README.md (Modifications section), my.tools/Chiran_MOD-02.png. Why mandatory: filenames like Led_Zeppelin-Stairway_To_Heaven(lute).abc are too long and descriptive for /play typing — designed for MOD panel browsing. No filename abbreviations used. MOD comparison: Chiran Songbook — older, unmaintained, but popular, stable, larger panel (screenshot in repo); Badger SongbookBB — actively developed at linawillow.org/home/plugins-2/songbook/, frequent updates. Index rebuild: songbook.hta scans Music folder recursively, builds searchable index of all *.abc files. Must rerun after every ZIP extract/update. MOD installation steps left as reader exercise per README.md."
+          "content": "Primary sources: 999.songs/README.md (NO in-game command-line support section), my.tools/README.md (Modifications section), my.tools/Chiran_MOD-02.png, my.tools/songbook.ps1. Why mandatory: filenames like Led_Zeppelin-Stairway_To_Heaven(lute).abc are too long for /play typing — designed for MOD panel browsing. MOD comparison: Chiran Songbook — older, unmaintained, popular, stable, larger panel (screenshot in repo); Badger SongbookBB — actively developed at linawillow.org. Index rebuild: songbook.ps1 (or songbook.hta) scans Music recursively and writes SongbookData.plugindata. Must rerun after every ZIP extract/update. MOD installation steps left as reader exercise per README.md."
         }
       ]
     },
@@ -215,17 +225,17 @@
       "purpose": "Consolidated reference documentation for all PowerShell and Python scripts in the my.tools/ directory",
       "page_notes": [
         {
-          "content": "Catalog all scripts in my.tools/: jukebox.ps1 (295 lines, random ABC player), zip_loop.ps1 (127 lines, ZIP archive creator), web_get.py (146 lines, HTTP file server), web_env.py (12 lines, server config). Supporting docs: README.md (overview), notes_scripts.md (usage examples with sample console output), notes_playlists.md (playlist merge guide). No other scripts exist in the repository. All scripts are standalone — no shared modules or libraries. PowerShell scripts require PS 7+ (PS 3/5 also work). Python script supports both Python 2 and 3. Include a summary table: Script | Language | Purpose | Must run from | Key functions."
+          "content": "Catalog my.tools/ scripts: jukebox.ps1 (random ABC player with CLI overrides, folder menu, skip/quit, process-tree stop), zip_loop.ps1 (ZIP archive creator; $PSScriptRoot-based), songbook.ps1 (SongbookData.plugindata index builder; preferred), songbook.hta (original Chiran HTA reference), web_get.py (HTTP file server), web_env.py (server config). Supporting docs: README.md, notes_scripts.md (Jukebox / Webserver / ZIP / Songbook examples), notes_playlists.md. Scripts are standalone — no shared modules. PowerShell targets PS 7+ (PS 3/5 generally work). Python web_get.py supports Py2 and Py3. Summary table: Script | Language | Purpose | Key params | Key functions/entrypoints."
         }
       ]
     },
     {
       "title": "Script Usage Guide",
-      "purpose": "Quick reference for executing jukebox.ps1, zip_loop.ps1, and web_get.py, including command-line arguments, prerequisites, and common workflows",
+      "purpose": "Quick reference for executing jukebox.ps1, zip_loop.ps1, songbook.ps1, and web_get.py, including parameters, prerequisites, and common workflows",
       "parent": "Script Reference",
       "page_notes": [
         {
-          "content": "Primary source: my.tools/notes_scripts.md (all three example sections). jukebox.ps1: run from any directory via '.\\jukebox.ps1' or right-click 'Run with PowerShell'; prompts for player (1/2) and folder selection; no CLI arguments. zip_loop.ps1: MUST run from my.tools/ directory ('.\\zip_loop.ps1'); no CLI arguments; outputs BEFORE/AFTER directory listings. web_get.py: run from target directory ('python web_get.py' or 'python2 web_get.py'); no CLI arguments; prints URLs then serves until CTRL-C. Common workflow sequence: edit ABCs → jukebox.ps1 test → zip_loop.ps1 package → git commit/push → web_get.py share locally. All scripts exit on CTRL-C."
+          "content": "Primary source: my.tools/notes_scripts.md (all four example sections). jukebox.ps1: run from any directory; optional -MusicPath/-PlayerPath/-EditorPath/-PauseSeconds/-History; prompts for player and folder; any key=skip, Q/Escape=stop. zip_loop.ps1: run from any directory; -MusicPath/-Destination/-Compression/-WhatIf; prints BEFORE/AFTER listings. songbook.ps1: .\\songbook.ps1 [-UserName] [-MusicPath] [-LotroHome] [-JukeOnly] [-AllUsers] [-WhatIf]. web_get.py: run from target directory ('python web_get.py'); prints URLs; CTRL-C stops server. Common workflow: edit ABCs → jukebox.ps1 test → zip_loop.ps1 package → git commit/push → songbook.ps1 after local extract → optional web_get.py LAN share."
         }
       ]
     },
@@ -235,16 +245,16 @@
       "parent": "Script Reference",
       "page_notes": [
         {
-          "content": "Prerequisites from script .NOTES sections and README.md: PowerShell 7+ with Unrestricted execution policy (Set-ExecutionPolicy Unrestricted as admin), Python 3.x (2.x also supported for web_get.py), Maestro/AbcPlayer installed to default path, LOTRO client with Music folder at default location, at least one juke.*.zip extracted to Music folder. Optional: WSL (Debian/Ubuntu) for Bash scripting, EasyABC, Notepad++/VSCodium, FFmpeg, WaoN. Workspace: clone repo via 'git clone git@github.com:awuehler/juke.lute.git'. .gitignore excludes: .vscode, __pycache__, *.pyc, *.log, *.exe, vendor/, tmp/, main. No package manager dependencies (no requirements.txt, no package.json). IDE config not included in repo."
+          "content": "Prerequisites from script .NOTES and README.md: PowerShell 7+ with Unrestricted execution policy (Set-ExecutionPolicy Unrestricted as admin), Python 3.x (2.x also supported for web_get.py), Maestro/AbcPlayer at default path (or pass -PlayerPath/-EditorPath), LOTRO Music folder at Documents default (or -MusicPath), at least one juke.* tree extracted for jukebox/zip_loop/songbook testing. Optional: WSL, EasyABC, Notepad++/VSCodium, FFmpeg, WaoN. Workspace: git clone git@github.com:awuehler/juke.lute.git. .gitignore excludes IDE/cache/binary noise. No package manager dependencies (no requirements.txt, no package.json)."
         }
       ]
     },
     {
       "title": "Future Development and AI Integration",
-      "purpose": "Document the aspirational goals for AI-driven ABC music generation, including planned LLM training using the jukebox corpus and references to existing AI music projects",
+      "purpose": "Document the aspirational goals for AI-driven ABC music generation, including planned LLM training using the jukebox corpus and remaining near-term script backlog",
       "page_notes": [
         {
-          "content": "Primary source: my.tools/README.md (AI section). This is aspirational — no AI code exists in the repo yet. Stated goal: use jukebox ABC files as training input for a purpose-built LLM (source: Hugging Face). Referenced projects: gwern.net/gpt-2-music (GPT-2 music generation), huggingface.co/sander-wood/bgpt (baroque music GPT), folkrnn.org (folk music RNN), themachinefolksession.org (machine folk session). Also note jukebox.ps1 TODO items: spacebar skip, expanded setup wizard, metadata-based selection, application restart after N iterations. zip_loop.ps1 TODOs: configurable LOTRO Music path, run-from-anywhere support. web_get.py TODO: upper limit on console file listing. These represent the actual near-term development backlog vs the long-term AI vision."
+          "content": "Primary source: my.tools/README.md (AI section) and in-script TODO comments. Aspirational AI goal (no AI code in repo yet): train an LLM on the jukebox ABC corpus (Hugging Face); references gwern.net/gpt-2-music, sander-wood/bgpt, folkrnn.org, themachinefolksession.org. Near-term jukebox.ps1 backlog still open: metadata-based pick (keys/beats/keywords), restart after N iterations, optional second-folder prompt. Completed since earlier wiki text: skip key (any key), Q/Escape quit, CLI path/pause/history overrides, process-tree stop, unique TEMP logs with cleanup, structured Title/Duration display, songbook.ps1 index port. zip_loop.ps1 formerly CWD-bound Music path TODOs are largely addressed via -MusicPath/-Destination/$PSScriptRoot. web_get.py TODO remains: upper limit on console file listing."
         }
       ]
     }

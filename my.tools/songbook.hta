@@ -1,3 +1,14 @@
+<!--
+  Vendored third-party reference from the Chiran Songbook MOD (2013 release).
+  Original author: Chiran. This copy is unmodified functional source kept in
+  juke.lute for documentation and comparison only.
+
+  Preferred juke.lute tool for index generation: my.tools/songbook.ps1
+  (PowerShell port with matching SongbookData.plugindata output).
+
+  Canonical install location (when the MOD is installed):
+  Documents\The Lord of the Rings Online\Plugins\Chiran\songbook.hta
+-->
 <head>
 <title>Songbook music library generator</title>
 
@@ -12,6 +23,12 @@
 
 </head>
 <script language="VBScript">
+	'========================================================================
+	' Vendored third-party reference: Chiran Songbook MOD (2013 release).
+	' Original author: Chiran. Kept unmodified in juke.lute for reference.
+	' Prefer my.tools/songbook.ps1 for day-to-day Songbook index generation.
+	'========================================================================
+
 	Dim mfso, dfso, folder, files, NewFile
 	Dim musicDir, dataDir, homeDir, newHome, songCount, dirCount, lotroUser
 	Dim WshShell, objEnv, osVersion

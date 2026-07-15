@@ -21,7 +21,6 @@ The purpose of the "Jukebox Player" is to make it easy to listen to multiple ABC
 
 - Non "Jukebox" ABC files can also be played as long as the duration can be found in the Title field
   - Which is left as an exercise for the reader to edit their copies of the ABC melody files from 3rd party sources
-  - NOTE: The "Jukebox Player" can be changed to use a different default directory location if needed to only use "Jukebox" ABC files stored under an alternate folder path
 
 ### Player Example
 
@@ -31,51 +30,49 @@ The purpose of the "Jukebox Player" is to make it easy to listen to multiple ABC
     "C:\Program Files (x86)\Maestro\AbcPlayer.exe"  Press '1' for this option.
     "C:\Program Files (x86)\Maestro\Maestro.exe"    Press '2' for this option.
     
-    NOTE:     Edit this script to change default paths or pause between melodies
+    NOTE:     Use -MusicPath / -PlayerPath / -EditorPath / -PauseSeconds / -History to override defaults
     PATH:     C:\Users\*****\Documents\The Lord of the Rings Online\Music
     PAUSE:    3 seconds between each melody
     HISTORY:  3 melodies (i.e. no repeats)
     ------------------------ jukebox.ps1 / ***** ------------------------
     Please enter which player to use (default is AbcPlayer): 2
-    
+    Found 10196 ABC file(s) under C:\Users\*****\Documents\The Lord of the Rings Online\Music
+
     Available folders:
-    [0]BASSOON-LUTE  [1]BASSOON-TTF  [2]FLUTE-LUTE  [3]FLUTE-TTF  [4]LUTE-TTF  [5]LUTE-VIOLIN
-    [6]TTF-VIOLIN  [7]JUKE.FIDDLE  [8]JUKE.FLUTE  [9]AI  [10]CLUB  [11]DISC  [12]FAVS  [13]FOLK
-    [14]FORMAL  [15]JAMS  [16]LONG1  [17]LONG2  [18]LONG3  [19]LONG4  [20]LONG5  [21]LONG6
-    [22]OLDER  [23]QUICK  [24]QUIET  [25]RURAL  [26]SHOW  [27]SPIRIT  [28]JUKE.VIOLIN  [29]ALL
-    Please enter the number for which folder to use (default is [29]ALL):
-    
-    Playtime  : 1:33 (96 seconds)
-    Selection : C_Petzold-Minuet_BWV_114(lute).abc (formal)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 3:04 (187 seconds)
-    Selection : Train-Hey_Soul_Sister(lute).abc (long3)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 2:52 (175 seconds)
-    Selection : Hollies-Bus_Stop(lute).abc (long2)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 2:33 (156 seconds)
-    Selection : Yevgeny_Krylatov-Wondrous_Future(duet).abc (flute-lute)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 3:49 (232 seconds)
-    Selection : Dance_Techno-Come_Take_My_Hand(lute).abc (favs)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 2:37 (160 seconds)
-    Selection : Initial_D-Running_In_The_90s(ttf).abc (juke.fiddle)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 3:49 (232 seconds)
-    Selection : Greek-Torapia(lute).abc (folk)
-    To Stop   : Use CTRL-C key to exit the jukebox.
-    
-    Playtime  : 3:16 (199 seconds)
-    Selection : John_Lennon-So_This_Is_Christmas(lute).abc (spirit)
-    To Stop   : Use CTRL-C key to exit the jukebox.
+    [0]favs  [1]bassoon  [2]flute  [3]violin  [4]bassoon\favs  [5]bassoon\folk  [6]bassoon\spirit  [7]bassoon\tolkien  [8]duet\bassoon-flute  [9]duet\bassoon-lute  [10]duet\bassoon-ttf  [11]duet\bassoon-violin  [12]duet\favs  [13]duet\flute-harp  [14]duet\flute-lute  [15]duet\flute-ttf  [16]duet\flute-violin  [17]duet\lute-ttf  [18]duet\lute-violin  [19]duet\ttf-violin  [20]fiddle\artist  [21]fiddle\favs  [22]fiddle\folk  [23]fiddle\formal  [24]fiddle\game  [25]fiddle\longer1  [26]fiddle\longer2  [27]fiddle\longer4  [28]fiddle\longest  [29]fiddle\older  [30]fiddle\spirit  [31]fiddle\tolkien  [32]fiddle\venue  [33]flute\favs  [34]flute\folk  [35]flute\formal  [36]flute\game  [37]flute\spirit  [38]flute\tolkien  [39]lute\ai  [40]lute\artist  [41]lute\club  [42]lute\favs  [43]lute\folk  [44]lute\formal  [45]lute\game  [46]lute\jams  [47]lute\longer1  [48]lute\longer2  [49]lute\longer3  [50]lute\longer4  [51]lute\longer5  [52]lute\longest  [53]lute\older  [54]lute\quick  [55]lute\quiet  [56]lute\rural  [57]lute\spirit  [58]lute\tolkien  [59]lute\venue  [60]violin\favs  [61]violin\folk  [62]violin\spirit  [63]violin\tolkien  [64]all
+    Please enter the number for which folder to use (default is [64]all): 3
+    Playing from [violin] (250 file(s)).
+    History seed: 3 distinct track(s).
+
+    Title     : By The Time I Get To Phoenix
+    Playtime  : 1:23 (83 seconds)
+    Wait      : 86 seconds (includes 3s pause)
+    Selection : Jimmy_Webb-Time_I_Get_To_Phoenix(violin).abc (juke.violin)
+    To Skip   : Press any key to jump to the next melody.
+    To Stop   : Press Q or Escape to exit the jukebox.
+
+    Title     : Babe I'm Gonna Leave You
+    Playtime  : 6:41 (401 seconds)
+    Wait      : 404 seconds (includes 3s pause)
+    Selection : Anne_Bredon-Babe_I'm_Gonna_Leave_You(violin).abc (juke.violin)
+    To Skip   : Press any key to jump to the next melody.
+    To Stop   : Press Q or Escape to exit the jukebox.
+
+    Title     : Only In Dreams
+    Playtime  : 7:55 (475 seconds)
+    Wait      : 478 seconds (includes 3s pause)
+    Selection : Weezer-Only_In_Dreams(violin).abc (juke.violin)
+    To Skip   : Press any key to jump to the next melody.
+    To Stop   : Press Q or Escape to exit the jukebox.
+
+    Title     : Blues 06
+    Playtime  : 1:22 (82 seconds)
+    Wait      : 85 seconds (includes 3s pause)
+    Selection : Jurg_Hochweber-Blues_06(violin).abc (juke.violin)
+    To Skip   : Press any key to jump to the next melody.
+    To Stop   : Press Q or Escape to exit the jukebox.
+
+    Jukebox stopped.
     ...
 
 ## Localhost Webserver
@@ -127,30 +124,44 @@ The purpose of the "Localhost Webserver" is to make it easy to redistribute a fo
 
 Script to package each instrument folder into a separate jukebox ZIP file. Automate the steps to create new editions of the ZIP archives with updated *.abc files in preparation for upload to a remote destination i.e. GitHub, GitLab, Gitea, & etc.
 
-- This script must be run from its home directory due to how the source/destination paths are setup
-  - Where, this script assumes that "git clone git@github.com:**********/juke.lute.git" has been run previously
+- This script assumes that "git clone git@github.com:**********/juke.lute.git" has been run previously
   - Please review the comments contained within the script to see the full list of options, conditions, or limitations
+- Use the -WhatIf parameter to confirm i.e. test that *.abc files are found within the location environment
 
-The purpose of the "ZIP Creator" is to quickly make a compressed backup file of the available ABC files located in the LOTRO Music folder.
+The purpose of the "ZIP Creator" is to quickly make a compressed backup of the available ABC files located in the default LOTRO Music folder.
 
 ### ZIP Example
 
-    PS C:\Users\*****\GitHub\juke.lute\my.tools> .\zip_loop.ps1
-    
+    PS C:\Users\*****> .\GitHub\juke.lute\my.tools\zip_loop.ps1
+
+    ------------------------ zip_loop.ps1 / ***** ------------------------
+    Music path : C:\Users\*****\Documents\The Lord of the Rings Online\Music
+    Output path: C:\Users\*****\GitHub\juke.lute\999.songs
+    Compression: Fastest
+    Found 6 juke folder(s): juke.bassoon, juke.duet, juke.fiddle, juke.flute, juke.lute, juke.violin
+    ------------------------ zip_loop.ps1 / ***** ------------------------
+
     BEFORE:
     
         Directory: C:\Users\*****\GitHub\juke.lute\999.songs
     
     Mode                 LastWriteTime         Length Name
     ----                 -------------         ------ ----
+    -a---           2/29/2025 1:54 PM          711593 juke.bassoon.zip
     -a---           2/29/2025 1:54 AM         6707074 juke.duet.zip
     -a---           2/29/2025 1:54 AM         6122024 juke.fiddle.zip
     -a---           2/29/2025 1:54 AM          246557 juke.flute.zip
     -a---           2/29/2025 1:55 AM        30814994 juke.lute.zip
     -a---           2/29/2025 1:55 AM          121572 juke.violin.zip
     
+    Packaging juke.bassoon...
+    Packaging juke.duet...
+    Packaging juke.fiddle...
+    Packaging juke.flute...
+    Packaging juke.lute...
+    Packaging juke.violin...
+
     AFTER:
-    
     -a---           2/29/2025  3:59 PM          41047 juke.bassoon.zip
     -a---           2/29/2025  3:59 PM        6968914 juke.duet.zip
     -a---           2/29/2025  3:59 PM        6261199 juke.fiddle.zip
@@ -158,17 +169,23 @@ The purpose of the "ZIP Creator" is to quickly make a compressed backup file of 
     -a---           2/29/2025  4:00 PM       30814556 juke.lute.zip
     -a---           2/29/2025  4:00 PM         121572 juke.violin.zip
     
+    Created 6 archive(s).
+
     PS C:\Users\*****\GitHub\juke.lute\my.tools>
 
 ## Songbook Index
 
-Script to build the Chiran Songbook MOD melody index (`SongbookData.plugindata`). PowerShell port of the original `songbook.hta` with the same output format plus optional parameters.
+Script to build the Chiran Songbook MOD melody index (i.e. `SongbookData.plugindata` file). This is a PowerShell port of the original `songbook.hta` VBScript tool with the same output format plus optional parameters and improvements.
 
-- Scans the LOTRO Music folder for `*.abc` and `*.txt` files
-- Writes plugin data under `Documents\The Lord of the Rings Online\PluginData\<username>\AllServers\`
-- Run after extracting or updating jukebox ZIP files (same step as `songbook.hta`)
-- Use `-JukeOnly` to index only `juke.*` folders; use `-WhatIf` to preview counts without writing
-- Use `-AllUsers` to update `SongbookData.plugindata` for every LOTRO account on this computer
+- Scans the LOTRO Music folder for `*.abc` and `*.txt` files (same as the original tool)
+- Writes the plugin data file under `Documents\The Lord of the Rings Online\PluginData\<LOTRO_USER>\AllServers\`
+- May be run anytime after extracting the jukebox ZIP files (or after any *.abc file changes)
+- Use `-JukeOnly` to index only `juke.*` folders
+  - Useful for creating a "jukebox" only playlist of *.abc melodies
+- Use `-WhatIf` to preview counts without updating the current SongbookData file 
+- Use `-AllUsers` to update the `SongbookData.plugindata` file for every LOTRO account setup on the local MS Windows system
+
+This script can also support non default locations (other than C:\ Drive) by using environment variables to override the default user, default LOTRO music folder, & etc. (refer to the in-script comments)
 
 ### Songbook Example
 
